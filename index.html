@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdTrack - Facebook Ad Monitoring</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2196f3;
+            --primary-dark: #1976d2;
+            --teal: #009688;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --success: #4caf50;
+            --dark: #212121;
+            --light: #f5f5f5;
+            --gray: #757575;
+            --light-gray: #e0e0e0;
+            --sidebar-width: 280px;
+            --topbar-height: 70px;
+            --transition: all 0.3s ease;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .logo i {
+            font-size: 24px;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+
+        .nav-item.active {
+            background-color: rgba(33, 150, 243, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+            color: var(--gray);
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item.active i {
+            color: var(--primary);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            height: var(--topbar-height);
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 5;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-bell i {
+            font-size: 20px;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .notification-bell:hover i {
+            color: var(--primary);
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .notification-panel {
+            position: absolute;
+            top: calc(var(--topbar-height) + 10px);
+            right: 30px;
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: white;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--border-radius);
+            z-index: 20;
+            display: none;
+        }
+
+        .notification-panel.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .notification-header h3 {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .close-notifications {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .close-notifications:hover {
+            color: var(--danger);
+        }
+
+        .notification-list {
+            padding: 0;
+        }
+
+        .notification-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+
+        .notification-item.unread {
+            background-color: rgba(33, 150, 243, 0.05);
+        }
+
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-title i {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .notification-time {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Content Area Styles */
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(33, 150, 243, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .stat-icon i {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .recent-activity {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .recent-activity h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(33, 150, 243, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .activity-icon i {
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-message {
+            font-size: 14px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 3px;
+        }
+
+        /* Tables */
+        .table-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background-color: rgba(33, 150, 243, 0.05);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #e53935;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #43a047;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.show .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background-color: var(--dark);
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background-color: var(--success);
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        .toast.warning {
+            background-color: var(--warning);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .logo h1, 
+            .nav-item span {
+                display: none;
+            }
+            
+            .logo {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .nav-item {
+                justify-content: center;
+                padding: 15px 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 10px;
+            }
+            
+            .logo {
+                border-bottom: none;
+                padding: 0;
+            }
+            
+            .nav-menu {
+                display: flex;
+                align-items: center;
+                padding: 0;
+            }
+            
+            .nav-item {
+                padding: 10px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .nav-item.active {
+                border-left: none;
+                border-bottom: 3px solid var(--primary);
+            }
+            
+            .content-area {
+                padding: 15px;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .notification-panel {
+                width: 300px;
+                right: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+            }
+            
+            .table-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-ad"></i>
+                <h1>AdTrack</h1>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-page="pages">
+                    <i class="fab fa-facebook"></i>
+                    <span>Facebook Pages</span>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <h2 class="page-title">Dashboard</h2>
+                
+                <div class="notification-bell" id="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">0</span>
+                </div>
+                <div class="notification-panel" id="notification-panel">
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <button class="close-notifications">&times;</button>
+                    </div>
+                    <div class="notification-list" id="notification-list">
+                        <!-- Notifications will be added here dynamically -->
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard View -->
+                <div class="dashboard-view" id="dashboard-view">
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fab fa-facebook"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="total-pages">0</h3>
+                                <p class="stat-label">Total Pages</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-ad"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="total-ads">0</h3>
+                                <p class="stat-label">Total Ads</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="old-ads">0</h3>
+                                <p class="stat-label">Ads > 7 Days</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activity">
+                        <h3>Recent Activity</h3>
+                        <div class="activity-list" id="activity-list">
+                            <!-- Activities will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Facebook Pages View -->
+                <div class="pages-view hidden" id="pages-view">
+                    <div class="pages-header">
+                        <h3>Facebook Pages</h3>
+                        <button class="btn btn-primary" id="add-page-btn">
+                            <i class="fas fa-plus"></i>
+                            Add Page
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Page Name</th>
+                                    <th>Website Link</th>
+                                    <th>Added Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pages-table-body">
+                                <!-- Pages will be added here dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Page Ads View -->
+                <div class="page-ads-view hidden" id="page-ads-view">
+                    <div class="ads-header">
+                        <h3 id="page-ads-title">Ads for <span id="current-page-name"></span></h3>
+                        <button class="btn btn-primary" id="add-ad-btn">
+                            <i class="fas fa-plus"></i>
+                            Add Ad
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Ad Name</th>
+                                    <th>Ad Link</th>
+                                    <th>Added Date</th>
+                                    <th>Days Running</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ads-table-body">
+                                <!-- Ads will be added here dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Add/Edit Page Modal -->
+    <div class="modal-overlay" id="page-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="page-modal-title">Add Facebook Page</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="page-form">
+                    <input type="hidden" id="page-id">
+                    <div class="form-group">
+                        <label for="page-name">Page Name</label>
+                        <input type="text" id="page-name" placeholder="Enter Facebook page name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="website-link">Website Link (optional)</label>
+                        <input type="url" id="website-link" placeholder="https://example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="page-date">Added Date</label>
+                        <input type="date" id="page-date" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline close-modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Page</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Ad Modal -->
+    <div class="modal-overlay" id="ad-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="ad-modal-title">Add Facebook Ad</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="ad-form">
+                    <input type="hidden" id="ad-id">
+                    <input type="hidden" id="ad-page-id">
+                    <div class="form-group">
+                        <label for="ad-name">Ad Name</label>
+                        <input type="text" id="ad-name" placeholder="Enter ad name or description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ad-link">Ad Link (Meta Ad Library)</label>
+                        <input type="url" id="ad-link" placeholder="https://www.facebook.com/ads/library/?id=..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ad-date">Added Date</label>
+                        <input type="date" id="ad-date" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline close-modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Ad</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Global variables
+        let currentView = 'dashboard';
+        let currentPageId = null;
+        let pages = [];
+        let ads = [];
+        let notifications = [];
+        let API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwDkR6sZ1hZs8L5rGi7pZBHOdY3SwGZVnASKIhx1wz_czuWRFbxD_omYF0bOLlaN7c7/exec';
+
+        // DOM Elements
+        const dashboardView = document.getElementById('dashboard-view');
+        const pagesView = document.getElementById('pages-view');
+        const pageAdsView = document.getElementById('page-ads-view');
+        const pagesTableBody = document.getElementById('pages-table-body');
+        const adsTableBody = document.getElementById('ads-table-body');
+        const currentPageName = document.getElementById('current-page-name');
+        const pageAdsTitle = document.getElementById('page-ads-title');
+        const totalPagesElement = document.getElementById('total-pages');
+        const totalAdsElement = document.getElementById('total-ads');
+        const oldAdsElement = document.getElementById('old-ads');
+        const activityList = document.getElementById('activity-list');
+        const notificationBell = document.getElementById('notification-bell');
+        const notificationPanel = document.getElementById('notification-panel');
+        const notificationList = document.getElementById('notification-list');
+        const notificationCount = document.querySelector('.notification-count');
+        const addPageBtn = document.getElementById('add-page-btn');
+        const addAdBtn = document.getElementById('add-ad-btn');
+        const pageModal = document.getElementById('page-modal');
+        const adModal = document.getElementById('ad-modal');
+        const pageForm = document.getElementById('page-form');
+        const adForm = document.getElementById('ad-form');
+        const toast = document.getElementById('toast');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date as default in forms
+            document.getElementById('page-date').valueAsDate = new Date();
+            document.getElementById('ad-date').valueAsDate = new Date();
+            
+            // Load initial data
+            loadData();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Load data from API
+        async function loadData() {
+            try {
+                showLoading();
+                
+                // In a real app, you would fetch from Google Apps Script API
+                // const [pagesResponse, adsResponse] = await Promise.all([
+                //     fetch(`${API_BASE_URL}/api/pages`),
+                //     fetch(`${API_BASE_URL}/api/ads`)
+                // ]);
+                // pages = await pagesResponse.json();
+                // ads = await adsResponse.json();
+                
+                // For demo purposes, we'll use mock data
+                pages = [
+                    { id: 'page1', name: 'Nike', website_link: 'https://nike.com', added_date: '2023-06-01' },
+                    { id: 'page2', name: 'Adidas', website_link: 'https://adidas.com', added_date: '2023-06-05' },
+                    { id: 'page3', name: 'Apple', website_link: 'https://apple.com', added_date: '2023-06-10' }
+                ];
+                
+                ads = [
+                    { id: 'ad1', page_id: 'page1', name: 'Summer Collection', link: 'https://facebook.com/ads/library/?id=123', added_date: '2023-06-15' },
+                    { id: 'ad2', page_id: 'page1', name: 'New Air Max', link: 'https://facebook.com/ads/library/?id=456', added_date: '2023-06-10' },
+                    { id: 'ad3', page_id: 'page2', name: 'World Cup Campaign', link: 'https://facebook.com/ads/library/?id=789', added_date: '2023-06-05' },
+                    { id: 'ad4', page_id: 'page3', name: 'iPhone 14 Pro', link: 'https://facebook.com/ads/library/?id=101', added_date: '2023-06-01' }
+                ];
+                
+                // Generate notifications
+                generateNotifications();
+                
+                // Update UI
+                updateUI();
+                
+                hideLoading();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showToast('Failed to load data. Please try again.', 'error');
+                hideLoading();
+            }
+        }
+
+        // Generate notifications based on ad data
+        function generateNotifications() {
+            notifications = [];
+            
+            // Check for ads older than 7 days
+            ads.forEach(ad => {
+                const daysActive = calculateDaysActive(ad.added_date);
+                if (daysActive > 7) {
+                    const page = pages.find(p => p.id === ad.page_id);
+                    notifications.push({
+                        id: `notif-${ad.id}-old`,
+                        type: 'old_ad',
+                        title: 'Old Ad Alert',
+                        message: `Ad "${ad.name}" from ${page?.name || 'Unknown'} has been running for ${daysActive} days`,
+                        timestamp: new Date().toISOString(),
+                        ad_id: ad.id,
+                        page_id: ad.page_id,
+                        read: false
+                    });
+                }
+            });
+            
+            // Add recent ads as notifications (last 3 days)
+            const recentAds = ads.filter(ad => calculateDaysActive(ad.added_date) <= 3);
+            recentAds.forEach(ad => {
+                const page = pages.find(p => p.id === ad.page_id);
+                notifications.unshift({
+                    id: `notif-${ad.id}-new`,
+                    type: 'new_ad',
+                    title: 'New Ad Added',
+                    message: `New ad "${ad.name}" added to ${page?.name || 'Unknown'}`,
+                    timestamp: ad.added_date,
+                    ad_id: ad.id,
+                    page_id: ad.page_id,
+                    read: false
+                });
+            });
+        }
+
+        // Update UI with loaded data
+        function updateUI() {
+            // Update dashboard stats
+            updateDashboardStats();
+            
+            // Update recent activity
+            updateRecentActivity();
+            
+            // Update notifications
+            updateNotifications();
+            
+            // Render current view
+            renderCurrentView();
+        }
+
+        // Update dashboard statistics
+        function updateDashboardStats() {
+            // Total pages
+            totalPagesElement.textContent = pages.length;
+            
+            // Total ads
+            totalAdsElement.textContent = ads.length;
+            
+            // Old ads (>7 days)
+            const oldAdsCount = ads.filter(ad => {
+                const daysActive = calculateDaysActive(ad.added_date);
+                return daysActive > 7;
+            }).length;
+            
+            oldAdsElement.textContent = oldAdsCount;
+        }
+
+        // Update recent activity
+        function updateRecentActivity() {
+            // Clear existing activities
+            activityList.innerHTML = '';
+            
+            // Sort ads by added date (newest first)
+            const sortedAds = [...ads].sort((a, b) => new Date(b.added_date) - new Date(a.added_date));
+            
+            // Get recent 5 ads
+            const recentAds = sortedAds.slice(0, 5);
+            
+            // Add activities to list
+            recentAds.forEach(ad => {
+                const page = pages.find(p => p.id === ad.page_id);
+                const pageName = page ? page.name : 'Unknown';
+                const daysActive = calculateDaysActive(ad.added_date);
+                
+                const li = document.createElement('li');
+                li.className = 'activity-item';
+                li.innerHTML = `
+                    <div class="activity-icon">
+                        <i class="fas fa-ad"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-message">New ad "${ad.name}" added to <strong>${pageName}</strong></p>
+                        <p class="activity-time">${formatDate(ad.added_date)} (${daysActive} days ago)</p>
+                    </div>
+                `;
+                
+                activityList.appendChild(li);
+            });
+        }
+
+        // Update notifications
+        function updateNotifications() {
+            // Clear existing notifications
+            notificationList.innerHTML = '';
+            
+            // Filter unread notifications
+            const unreadNotifications = notifications.filter(notif => !notif.read);
+            
+            // Update notification count
+            notificationCount.textContent = unreadNotifications.length;
+            notificationCount.style.display = unreadNotifications.length > 0 ? 'flex' : 'none';
+            
+            // Add notifications to panel
+            notifications.forEach(notification => {
+                const li = document.createElement('li');
+                li.className = `notification-item ${notification.read ? '' : 'unread'}`;
+                li.innerHTML = `
+                    <div class="notification-title">
+                        <i class="fas ${getNotificationIcon(notification.type)}"></i>
+                        ${notification.title}
+                    </div>
+                    <p class="notification-message">${notification.message}</p>
+                    <span class="notification-time">${formatTimeAgo(notification.timestamp)}</span>
+                `;
+                
+                li.addEventListener('click', () => {
+                    handleNotificationClick(notification);
+                    li.classList.remove('unread');
+                });
+                
+                notificationList.appendChild(li);
+            });
+        }
+
+        // Get appropriate icon for notification type
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'new_ad': return 'fa-ad';
+                case 'old_ad': return 'fa-clock';
+                default: return 'fa-bell';
+            }
+        }
+
+        // Handle notification click
+        function handleNotificationClick(notification) {
+            // Mark as read
+            markNotificationAsRead(notification.id);
+            
+            // Navigate based on notification
+            if (notification.page_id) {
+                const page = pages.find(p => p.id === notification.page_id);
+                if (page) {
+                    showPageAds(page.id, page.name);
+                }
+            }
+        }
+
+        // Mark notification as read
+        function markNotificationAsRead(notificationId) {
+            const notification = notifications.find(n => n.id === notificationId);
+            if (notification) {
+                notification.read = true;
+                updateNotifications();
+            }
+        }
+
+        // Render current view based on state
+        function renderCurrentView() {
+            // Hide all views
+            dashboardView.classList.add('hidden');
+            pagesView.classList.add('hidden');
+            pageAdsView.classList.add('hidden');
+            
+            // Show current view
+            if (currentView === 'dashboard') {
+                dashboardView.classList.remove('hidden');
+                document.querySelector('.page-title').textContent = 'Dashboard';
+            } 
+            else if (currentView === 'pages') {
+                pagesView.classList.remove('hidden');
+                document.querySelector('.page-title').textContent = 'Facebook Pages';
+                renderPagesTable();
+            }
+            else if (currentView === 'page-ads' && currentPageId) {
+                pageAdsView.classList.remove('hidden');
+                renderPageAds(currentPageId);
+            }
+        }
+
+        // Render pages table
+        function renderPagesTable() {
+            // Clear table
+            pagesTableBody.innerHTML = '';
+            
+            // Add pages to table or show empty state
+            if (pages.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td colspan="4" style="text-align: center; padding: 30px;">
+                        <i class="fas fa-folder-open" style="font-size: 40px; color: #e0e0e0; margin-bottom: 10px;"></i>
+                        <h4 style="color: #757575;">No Facebook pages added yet</h4>
+                        <button class="btn btn-primary" id="add-first-page" style="margin-top: 15px;">
+                            <i class="fas fa-plus"></i>
+                            Add Your First Page
+                        </button>
+                    </td>
+                `;
+                
+                tr.querySelector('#add-first-page').addEventListener('click', openAddPageModal);
+                pagesTableBody.appendChild(tr);
+                return;
+            }
+            
+            // Add pages to table
+            pages.forEach(page => {
+                const tr = document.createElement('tr');
+                tr.dataset.pageId = page.id;
+                tr.innerHTML = `
+                    <td>${page.name}</td>
+                    <td>${page.website_link ? `<a href="${page.website_link}" target="_blank">${truncateText(page.website_link, 30)}</a>` : 'N/A'}</td>
+                    <td>${formatDate(page.added_date)}</td>
+                    <td class="table-actions">
+                        <button class="btn btn-outline view-ads-btn">
+                            <i class="fas fa-ad"></i>
+                            View Ads
+                        </button>
+                        <button class="btn btn-outline edit-page-btn">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </button>
+                        <button class="btn btn-danger delete-page-btn">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                    </td>
+                `;
+                
+                // Add event listeners to buttons
+                tr.querySelector('.view-ads-btn').addEventListener('click', () => {
+                    showPageAds(page.id, page.name);
+                });
+                
+                tr.querySelector('.edit-page-btn').addEventListener('click', () => {
+                    openEditPageModal(page);
+                });
+                
+                tr.querySelector('.delete-page-btn').addEventListener('click', () => {
+                    deletePage(page.id);
+                });
+                
+                pagesTableBody.appendChild(tr);
+            });
+        }
+
+        // Render ads for a specific page
+        function renderPageAds(pageId) {
+            // Find the page
+            const page = pages.find(p => p.id === pageId);
+            if (!page) return;
+            
+            // Update page title
+            currentPageName.textContent = page.name;
+            pageAdsTitle.textContent = `Ads for ${page.name}`;
+            
+            // Filter ads by page
+            const pageAds = ads.filter(ad => ad.page_id === pageId);
+            
+            // Clear table
+            adsTableBody.innerHTML = '';
+            
+            // Add ads to table or show empty state
+            if (pageAds.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td colspan="5" style="text-align: center; padding: 30px;">
+                        <i class="fas fa-ad" style="font-size: 40px; color: #e0e0e0; margin-bottom: 10px;"></i>
+                        <h4 style="color: #757575;">No ads for this page yet</h4>
+                        <button class="btn btn-primary" id="add-first-ad" style="margin-top: 15px;">
+                            <i class="fas fa-plus"></i>
+                            Add Your First Ad
+                        </button>
+                    </td>
+                `;
+                
+                tr.querySelector('#add-first-ad').addEventListener('click', openAddAdModal);
+                adsTableBody.appendChild(tr);
+                return;
+            }
+            
+            // Add ads to table
+            pageAds.forEach(ad => {
+                const daysActive = calculateDaysActive(ad.added_date);
+                const isOldAd = daysActive > 7;
+                
+                const tr = document.createElement('tr');
+                tr.dataset.adId = ad.id;
+                tr.innerHTML = `
+                    <td>${ad.name}</td>
+                    <td><a href="${ad.link}" target="_blank">${truncateText(ad.link, 30)}</a></td>
+                    <td>${formatDate(ad.added_date)}</td>
+                    <td>
+                        <span class="${isOldAd ? 'text-danger' : ''}">
+                            ${daysActive} day${daysActive !== 1 ? 's' : ''}
+                        </span>
+                    </td>
+                    <td class="table-actions">
+                        <button class="btn btn-outline edit-ad-btn">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </button>
+                        <button class="btn btn-danger delete-ad-btn">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                    </td>
+                `;
+                
+                // Add event listeners to buttons
+                tr.querySelector('.edit-ad-btn').addEventListener('click', () => {
+                    openEditAdModal(ad);
+                });
+                
+                tr.querySelector('.delete-ad-btn').addEventListener('click', () => {
+                    deleteAd(ad.id);
+                });
+                
+                adsTableBody.appendChild(tr);
+            });
+        }
+
+        // Show page ads view
+        function showPageAds(pageId, pageName) {
+            currentView = 'page-ads';
+            currentPageId = pageId;
+            renderCurrentView();
+        }
+
+        // Open add page modal
+        function openAddPageModal() {
+            // Reset form
+            pageForm.reset();
+            document.getElementById('page-id').value = '';
+            document.getElementById('page-modal-title').textContent = 'Add Facebook Page';
+            document.getElementById('page-date').valueAsDate = new Date();
+            
+            // Show modal
+            showModal(pageModal);
+        }
+
+        // Open edit page modal
+        function openEditPageModal(page) {
+            // Fill form with page data
+            document.getElementById('page-id').value = page.id;
+            document.getElementById('page-name').value = page.name;
+            document.getElementById('website-link').value = page.website_link || '';
+            document.getElementById('page-date').value = page.added_date;
+            document.getElementById('page-modal-title').textContent = 'Edit Facebook Page';
+            
+            // Show modal
+            showModal(pageModal);
+        }
+
+        // Open add ad modal
+        function openAddAdModal() {
+            if (!currentPageId) return;
+            
+            // Reset form
+            adForm.reset();
+            document.getElementById('ad-id').value = '';
+            document.getElementById('ad-page-id').value = currentPageId;
+            document.getElementById('ad-modal-title').textContent = 'Add Facebook Ad';
+            document.getElementById('ad-date').valueAsDate = new Date();
+            
+            // Show modal
+            showModal(adModal);
+        }
+
+        // Open edit ad modal
+        function openEditAdModal(ad) {
+            // Fill form with ad data
+            document.getElementById('ad-id').value = ad.id;
+            document.getElementById('ad-page-id').value = ad.page_id;
+            document.getElementById('ad-name').value = ad.name;
+            document.getElementById('ad-link').value = ad.link;
+            document.getElementById('ad-date').value = ad.added_date;
+            document.getElementById('ad-modal-title').textContent = 'Edit Facebook Ad';
+            
+            // Show modal
+            showModal(adModal);
+        }
+
+        // Show modal with animation
+        function showModal(modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close all modals
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.classList.remove('show');
+            });
+            document.body.style.overflow = '';
+        }
+
+        // Handle page form submission
+        async function handlePageFormSubmit(e) {
+            e.preventDefault();
+            
+            const pageId = document.getElementById('page-id').value;
+            const name = document.getElementById('page-name').value.trim();
+            const websiteLink = document.getElementById('website-link').value.trim();
+            const addedDate = document.getElementById('page-date').value;
+            
+            if (!name || !addedDate) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const pageData = {
+                name,
+                website_link: websiteLink || null,
+                added_date: addedDate
+            };
+            
+            try {
+                showLoading();
+                
+                if (pageId) {
+                    // Update existing page
+                    const index = pages.findIndex(p => p.id === pageId);
+                    if (index !== -1) {
+                        pages[index] = { ...pages[index], ...pageData };
+                        showToast('Page updated successfully!', 'success');
+                    }
+                } else {
+                    // Create new page
+                    const newPage = {
+                        id: `page-${Date.now()}`,
+                        ...pageData
+                    };
+                    pages.unshift(newPage);
+                    showToast('Page added successfully!', 'success');
+                }
+                
+                // Update UI
+                updateUI();
+                
+                // Close modal
+                closeModals();
+            } catch (error) {
+                console.error('Error saving page:', error);
+                showToast('Failed to save page. Please try again.', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Handle ad form submission
+        async function handleAdFormSubmit(e) {
+            e.preventDefault();
+            
+            const adId = document.getElementById('ad-id').value;
+            const pageId = document.getElementById('ad-page-id').value;
+            const name = document.getElementById('ad-name').value.trim();
+            const link = document.getElementById('ad-link').value.trim();
+            const addedDate = document.getElementById('ad-date').value;
+            
+            if (!name || !link || !addedDate || !pageId) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const adData = {
+                name,
+                link,
+                added_date: addedDate,
+                page_id: pageId
+            };
+            
+            try {
+                showLoading();
+                
+                if (adId) {
+                    // Update existing ad
+                    const index = ads.findIndex(a => a.id === adId);
+                    if (index !== -1) {
+                        ads[index] = { ...ads[index], ...adData };
+                        showToast('Ad updated successfully!', 'success');
+                    }
+                } else {
+                    // Create new ad
+                    const newAd = {
+                        id: `ad-${Date.now()}`,
+                        ...adData
+                    };
+                    ads.unshift(newAd);
+                    showToast('Ad added successfully!', 'success');
+                }
+                
+                // Generate new notifications
+                generateNotifications();
+                
+                // Update UI
+                updateUI();
+                
+                // Close modal
+                closeModals();
+            } catch (error) {
+                console.error('Error saving ad:', error);
+                showToast('Failed to save ad. Please try again.', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Delete page
+        async function deletePage(pageId) {
+            if (!confirm('Are you sure you want to delete this page and all its ads? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                showLoading();
+                
+                // Delete the page
+                const pageIndex = pages.findIndex(p => p.id === pageId);
+                if (pageIndex === -1) {
+                    showToast('Page not found', 'error');
+                    return;
+                }
+                
+                // Delete all ads for this page
+                ads = ads.filter(ad => ad.page_id !== pageId);
+                
+                // Remove the page
+                pages.splice(pageIndex, 1);
+                
+                // If we're currently viewing this page's ads, go back to pages view
+                if (currentView === 'page-ads' && currentPageId === pageId) {
+                    currentView = 'pages';
+                    currentPageId = null;
+                }
+                
+                // Generate new notifications
+                generateNotifications();
+                
+                // Update UI
+                updateUI();
+                
+                showToast('Page deleted successfully', 'success');
+            } catch (error) {
+                console.error('Error deleting page:', error);
+                showToast('Failed to delete page. Please try again.', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Delete ad
+        async function deleteAd(adId) {
+            if (!confirm('Are you sure you want to delete this ad? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                showLoading();
+                
+                // Delete the ad
+                const adIndex = ads.findIndex(a => a.id === adId);
+                if (adIndex === -1) {
+                    showToast('Ad not found', 'error');
+                    return;
+                }
+                
+                // Remove the ad
+                ads.splice(adIndex, 1);
+                
+                // Generate new notifications
+                generateNotifications();
+                
+                // Update UI
+                updateUI();
+                
+                showToast('Ad deleted successfully', 'success');
+            } catch (error) {
+                console.error('Error deleting ad:', error);
+                showToast('Failed to delete ad. Please try again.', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            toast.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add(type);
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Calculate days active
+        function calculateDaysActive(dateString) {
+            const addedDate = new Date(dateString);
+            const today = new Date();
+            const diffTime = today - addedDate;
+            return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Format time ago
+        function formatTimeAgo(timestamp) {
+            const now = new Date();
+            const date = new Date(timestamp);
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+            if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+            
+            return formatDate(timestamp);
+        }
+
+        // Truncate text
+        function truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        // Show loading state
+        function showLoading() {
+            // You can implement a loading spinner here
+            console.log('Loading...');
+        }
+
+        // Hide loading state
+        function hideLoading() {
+            console.log('Loading complete');
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Navigation
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const page = item.dataset.page;
+                    if (page === 'dashboard') {
+                        currentView = 'dashboard';
+                        currentPageId = null;
+                    } else if (page === 'pages') {
+                        currentView = 'pages';
+                        currentPageId = null;
+                    }
+                    renderCurrentView();
+                    
+                    // Update active state
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+            
+            // Add page button
+            addPageBtn.addEventListener('click', openAddPageModal);
+            
+            // Add ad button
+            addAdBtn.addEventListener('click', openAddAdModal);
+            
+            // Notification bell
+            notificationBell.addEventListener('click', () => {
+                notificationPanel.classList.toggle('show');
+            });
+            
+            // Close notifications button
+            document.querySelector('.close-notifications').addEventListener('click', () => {
+                notificationPanel.classList.remove('show');
+            });
+            
+            // Modal close buttons
+            document.querySelectorAll('.close-modal').forEach(button => {
+                button.addEventListener('click', closeModals);
+            });
+            
+            // Close modals when clicking outside
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModals();
+                    }
+                });
+            });
+            
+            // Form submissions
+            pageForm.addEventListener('submit', handlePageFormSubmit);
+            adForm.addEventListener('submit', handleAdFormSubmit);
+        }
+    </script>
+</body>
+</html>
