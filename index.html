@@ -4,1593 +4,1319 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facebook Ad Monitor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Poppins and Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📢</text></svg>">
+    <!-- Favicon as SVG for Facebook icon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232196f3'%3E%3Cpath d='M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15h-3V12h3V9c0-3.31 2.69-6 6-6s6 2.69 6 6v3h-3v3h3v6.8c4.56-.93 8-4.96 8-9.8z'/%3E%3C/svg%3E" type="image/svg+xml">
     <style>
+        /* CSS Variables for consistent styling */
         :root {
-            --primary-color: #2196f3;
-            --secondary-color: #009688;
-            --light-gray: #f5f5f5;
-            --medium-gray: #e0e0e0;
-            --dark-gray: #757575;
-            --white: #ffffff;
-            --black: #212121;
-            --error-color: #f44336;
+            --primary-color: #2196f3; /* Blue */
+            --secondary-color: #009688; /* Teal */
+            --background-light: #f8f9fa;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --light-text-color: #666;
+            --border-color: #e0e0e0;
+            --hover-color: #f0f0f0;
+            --danger-color: #f44336;
+            --success-color: #4CAF50;
             --warning-color: #ff9800;
-            --success-color: #4caf50;
         }
 
+        /* Universal Box-sizing and reset margins/paddings */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
         }
 
+        /* Body styling */
         body {
-            background-color: var(--light-gray);
-            color: var(--black);
+            font-family: 'Poppins', 'Roboto', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-color);
+            line-height: 1.6;
             display: flex;
-            min-height: 100vh;
+            min-height: 100vh; /* Full viewport height */
         }
 
-        /* Sidebar Styles */
+        /* Main container for sidebar and content */
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Sidebar Styling */
         .sidebar {
             width: 250px;
-            background-color: var(--white);
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            height: 100vh;
-            padding: 20px 0;
-            transition: all 0.3s;
-            z-index: 1000;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
         }
 
-        .sidebar-header {
-            padding: 0 20px 20px;
-            border-bottom: 1px solid var(--medium-gray);
-        }
-
-        .sidebar-header h2 {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-        }
-
-        .sidebar-menu {
-            margin-top: 20px;
-        }
-
-        .menu-item {
-            padding: 12px 20px;
+        /* Logo in sidebar */
+        .sidebar .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
             display: flex;
             align-items: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--dark-gray);
+            justify-content: center;
         }
 
-        .menu-item:hover {
-            background-color: var(--light-gray);
-            color: var(--primary-color);
-        }
-
-        .menu-item.active {
-            background-color: rgba(33, 150, 243, 0.1);
-            color: var(--primary-color);
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .menu-item i {
+        .sidebar .logo i {
             margin-right: 10px;
-            font-size: 1.1rem;
         }
 
-        /* Main Content Styles */
+        /* Navigation list in sidebar */
+        .navigation ul {
+            list-style: none;
+        }
+
+        .navigation ul li {
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .navigation ul li:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .navigation ul li.active {
+            background-color: rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+        }
+
+        .navigation ul li i {
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        /* Main content area */
         .main-content {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Topbar styling */
         .topbar {
+            background-color: var(--card-background);
+            padding: 20px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            position: sticky; /* Sticky header */
+            top: 0;
+            z-index: 1000;
         }
 
-        .page-title h1 {
-            font-size: 1.5rem;
-            color: var(--black);
+        .topbar h1 {
+            font-size: 1.8em;
+            color: var(--text-color);
         }
 
+        /* Notification icon styling */
         .notification-icon {
             position: relative;
             cursor: pointer;
+            font-size: 1.5em;
+            color: var(--light-text-color);
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
         }
 
-        .notification-bell {
-            font-size: 1.3rem;
-            color: var(--dark-gray);
+        .notification-icon:hover {
+            background-color: var(--hover-color);
         }
 
         .notification-badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            background-color: var(--error-color);
+            background-color: var(--danger-color);
             color: white;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
-            animation: pulse 2s infinite;
+            align-items: center;
+            font-size: 0.7em;
+            animation: pulse 1.5s infinite; /* Pulsing animation for notifications */
+        }
+
+        .notification-badge.hidden {
+            display: none;
         }
 
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-            }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
-        /* Stats Cards */
-        .stats-container {
+        /* Content area padding */
+        .content-area {
+            padding: 30px;
+            flex-grow: 1;
+        }
+
+        /* Dashboard Stat Cards layout */
+        .stat-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
+        /* Individual stat card styling */
         .stat-card {
-            background-color: var(--white);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s;
+            align-items: flex-start;
+            transition: transform 0.3s ease;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .stat-icon {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+        .stat-card .icon {
+            font-size: 2.5em;
             color: var(--primary-color);
+            margin-bottom: 15px;
         }
 
-        .stat-title {
-            font-size: 0.9rem;
-            color: var(--dark-gray);
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--text-color);
             margin-bottom: 5px;
         }
 
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--black);
-        }
-
-        /* Table Styles */
-        .table-container {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--medium-gray);
-        }
-
-        th {
-            background-color: var(--light-gray);
-            color: var(--dark-gray);
+        .stat-card .label {
+            font-size: 1.1em;
+            color: var(--light-text-color);
             font-weight: 500;
         }
 
-        tr:hover {
-            background-color: rgba(33, 150, 243, 0.05);
+        /* Table container styling */
+        .data-table-container {
+            background-color: var(--card-background);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
 
-        .action-btn {
-            padding: 6px 12px;
+        /* Table styling */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th, .data-table td {
+            text-align: left;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background-color: var(--hover-color);
+            color: var(--text-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        .data-table .action-buttons button {
+            margin-right: 8px;
+        }
+
+        /* Button base styles */
+        .button {
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            margin-right: 5px;
+            gap: 8px;
         }
 
-        .action-btn i {
-            margin-right: 5px;
+        .button i {
+            font-size: 1.1em;
         }
 
-        .view-btn {
+        /* Specific button colors */
+        .primary-button {
             background-color: var(--primary-color);
             color: white;
         }
 
-        .edit-btn {
+        .primary-button:hover {
+            background-color: #1976d2; /* Darker blue */
+            transform: translateY(-2px);
+        }
+
+        .secondary-button {
             background-color: var(--secondary-color);
             color: white;
         }
 
-        .delete-btn {
-            background-color: var(--error-color);
+        .secondary-button:hover {
+            background-color: #00796b; /* Darker teal */
+            transform: translateY(-2px);
+        }
+
+        .delete-button {
+            background-color: var(--danger-color);
             color: white;
         }
 
-        .add-btn {
-            background-color: var(--success-color);
+        .delete-button:hover {
+            background-color: #d32f2f; /* Darker red */
+            transform: translateY(-2px);
+        }
+
+        .edit-button {
+            background-color: #FFC107; /* Amber */
+            color: #333;
+        }
+
+        .edit-button:hover {
+            background-color: #FFA000;
+            transform: translateY(-2px);
+        }
+
+        .view-ads-button {
+            background-color: #9E9E9E; /* Grey */
             color: white;
-            padding: 10px 15px;
-            margin-bottom: 15px;
         }
 
-        .add-btn i {
-            margin-right: 5px;
+        .view-ads-button:hover {
+            background-color: #757575;
+            transform: translateY(-2px);
         }
 
-        /* Modal Styles */
+        /* Modal overlay */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2000; /* Sit on top */
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+            display: flex; /* Use flexbox for centering */
+            align-items: center;
             justify-content: center;
-            align-items: center;
         }
 
+        /* Modal content box */
         .modal-content {
-            background-color: var(--white);
-            border-radius: 8px;
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 12px;
             width: 90%;
-            max-width: 500px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            animation: modalFadeIn 0.3s;
+            max-width: 550px; /* Max width for modals */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease-out; /* Fade-in animation */
         }
 
-        @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--medium-gray);
+        .modal-content h2 {
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-size: 1.8em;
+            text-align: center;
         }
 
-        .modal-header h2 {
-            font-size: 1.3rem;
-            color: var(--black);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
+        /* Close button for modals */
+        .close-button {
+            color: var(--light-text-color);
+            font-size: 2em;
+            position: absolute;
+            top: 15px;
+            right: 25px;
             cursor: pointer;
-            color: var(--dark-gray);
+            transition: color 0.3s ease;
         }
 
+        .close-button:hover {
+            color: var(--text-color);
+        }
+
+        /* Form group styling within modals */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: var(--dark-gray);
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--light-text-color);
         }
 
-        .form-group input, .form-group select {
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group input[type="date"],
+        .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid var(--medium-gray);
-            border-radius: 4px;
-            font-size: 0.9rem;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
         }
 
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 20px;
+        .modal .button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            margin-top: 10px;
         }
 
-        .submit-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
-        }
-
-        .submit-btn:hover {
-            background-color: #1976d2;
-        }
-
-        /* Notification Modal */
-        .notification-modal {
-            width: 90%;
-            max-width: 400px;
+        /* Notification list within the modal */
+        .notification-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
         }
 
         .notification-item {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--medium-gray);
+            background-color: var(--hover-color);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.95em;
         }
 
         .notification-item:last-child {
-            border-bottom: none;
+            margin-bottom: 0;
         }
 
-        .notification-title {
-            font-weight: 500;
+        .notification-item strong {
+            color: var(--primary-color);
             margin-bottom: 5px;
         }
 
-        .notification-meta {
+        .notification-item .ad-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .notification-item .page-name {
+            font-size: 0.85em;
+            color: var(--light-text-color);
+        }
+
+        .notification-item .details {
+            margin-top: 5px;
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--dark-gray);
+            font-size: 0.8em;
+            color: var(--light-text-color);
         }
 
-        .notification-type {
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 500;
+        /* Notification item type specific colors */
+        .notification-item.type-7-days { background-color: rgba(255, 152, 0, 0.1); } /* Orange light */
+        .notification-item.type-10-days { background-color: rgba(255, 87, 34, 0.1); } /* Deep Orange light */
+        .notification-item.type-15-days { background-color: rgba(244, 67, 54, 0.1); } /* Red light */
+        .notification-item.type-30-days { background-color: rgba(183, 28, 28, 0.1); } /* Dark Red light */
+        .notification-item.type-deleted { background-color: rgba(96, 125, 139, 0.1); } /* Blue Grey light */
+
+        .notification-item .action-type {
+            font-weight: 600;
         }
 
-        .type-delete {
-            background-color: rgba(244, 67, 54, 0.1);
-            color: var(--error-color);
-        }
+        .notification-item .action-type.type-7-days { color: var(--warning-color); }
+        .notification-item .action-type.type-10-days { color: #FF5722; } /* Deep Orange */
+        .notification-item .action-type.type-15-days { color: var(--danger-color); }
+        .notification-item .action-type.type-30-days { color: #B71C1C; } /* Dark Red */
+        .notification-item .action-type.type-deleted { color: #607D8B; } /* Blue Grey */
 
-        .type-7days {
-            background-color: rgba(255, 152, 0, 0.1);
-            color: var(--warning-color);
-        }
 
-        .type-10days {
-            background-color: rgba(255, 152, 0, 0.2);
-            color: var(--warning-color);
-        }
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .hidden { display: none !important; }
 
-        .type-15days {
-            background-color: rgba(255, 152, 0, 0.3);
-            color: var(--warning-color);
-        }
-
-        .type-30days {
-            background-color: rgba(255, 152, 0, 0.4);
-            color: var(--warning-color);
-        }
-
-        /* Responsive Styles */
+        /* Responsive Design for smaller screens */
         @media (max-width: 768px) {
             .sidebar {
-                width: 70px;
-                overflow: hidden;
+                width: 100%;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 10px 0;
             }
 
-            .sidebar-header h2, .menu-item span {
-                display: none;
+            .sidebar .logo {
+                display: none; /* Hide logo on small screens */
             }
 
-            .menu-item {
-                justify-content: center;
+            .navigation ul {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
             }
 
-            .menu-item i {
+            .navigation ul li {
+                padding: 10px 15px;
+                margin-bottom: 0;
+                text-align: center;
+                flex-direction: column;
+                font-size: 0.8em;
+            }
+
+            .navigation ul li i {
                 margin-right: 0;
-                font-size: 1.3rem;
+                margin-bottom: 5px;
             }
 
-            .main-content {
-                margin-left: 70px;
-                width: calc(100% - 70px);
-            }
-        }
-
-        @media (max-width: 576px) {
-            .stats-container {
-                grid-template-columns: 1fr;
+            .container {
+                flex-direction: column;
             }
 
-            .modal-content {
-                width: 95%;
-                padding: 15px;
+            .topbar {
+                padding: 15px 20px;
             }
-        }
 
-        /* Page specific styles */
-        #pages-page, #ads-page {
-            display: none;
-        }
+            .topbar h1 {
+                font-size: 1.5em;
+            }
 
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: var(--dark-gray);
-        }
+            .content-area {
+                padding: 20px;
+            }
 
-        .breadcrumb a {
-            color: var(--primary-color);
-            text-decoration: none;
-            margin-right: 5px;
-        }
+            .stat-cards {
+                grid-template-columns: 1fr; /* Single column on small screens */
+            }
 
-        .breadcrumb-separator {
-            margin: 0 5px;
-        }
+            .data-table th, .data-table td {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
 
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .page-header h2 {
-            color: var(--black);
+            .button {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h2>Ad Monitor</h2>
-        </div>
-        <div class="sidebar-menu">
-            <div class="menu-item active" data-page="dashboard">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fab fa-facebook-f"></i> Ad Monitor
             </div>
-            <div class="menu-item" data-page="pages">
-                <i class="fab fa-facebook"></i>
-                <span>Facebook Pages</span>
+            <nav class="navigation">
+                <ul>
+                    <li class="active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </li>
+                    <li data-page="facebook-pages">
+                        <i class="fab fa-facebook-square"></i> Facebook Pages
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Topbar with Title and Notification Icon -->
+            <header class="topbar">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="notification-icon" id="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge hidden"></span>
+                </div>
+            </header>
+
+            <!-- Dynamic Content Area -->
+            <div class="content-area" id="content-area">
+                <!-- Content will be loaded dynamically here by JavaScript -->
             </div>
-        </div>
+        </main>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Dashboard Page -->
-        <div id="dashboard-page">
-            <div class="topbar">
-                <div class="page-title">
-                    <h1>Dashboard</h1>
-                </div>
-                <div class="notification-icon">
-                    <i class="fas fa-bell notification-bell"></i>
-                    <div class="notification-badge" id="notification-count">0</div>
-                </div>
-            </div>
+    <!-- Modals for Add Page, Add Ad, Edit Ad, and Notifications -->
 
-            <!-- Stats Cards -->
-            <div class="stats-container">
-                <div class="stat-card">
-                    <i class="fas fa-check-circle stat-icon"></i>
-                    <div class="stat-title">Total Facebook Pages</div>
-                    <div class="stat-value" id="total-pages">0</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-ad stat-icon"></i>
-                    <div class="stat-title">Total Ads Added</div>
-                    <div class="stat-value" id="total-ads">0</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-clock stat-icon"></i>
-                    <div class="stat-title">Ads Running >7 Days</div>
-                    <div class="stat-value" id="ads-over-7-days">0</div>
-                </div>
-            </div>
-
-            <!-- Recent Ads Table -->
-            <div class="table-container">
-                <h2>Recent Ads</h2>
-                <table id="recent-ads-table">
-                    <thead>
-                        <tr>
-                            <th>Ad Name</th>
-                            <th>Page</th>
-                            <th>Running Since</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Ads will be loaded here dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Facebook Pages Page -->
-        <div id="pages-page">
-            <div class="topbar">
-                <div class="page-title">
-                    <h1>Facebook Pages</h1>
-                </div>
-                <div class="notification-icon">
-                    <i class="fas fa-bell notification-bell"></i>
-                    <div class="notification-badge" id="notification-count-pages">0</div>
-                </div>
-            </div>
-
-            <div class="table-container">
-                <button class="action-btn add-btn" id="add-page-btn">
-                    <i class="fas fa-plus"></i> Add Page
-                </button>
-                <table id="pages-table">
-                    <thead>
-                        <tr>
-                            <th>Page Name</th>
-                            <th>Website Link</th>
-                            <th>Added Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Pages will be loaded here dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Ads Under a Page -->
-        <div id="ads-page">
-            <div class="topbar">
-                <div class="page-title">
-                    <div class="breadcrumb">
-                        <a href="#" id="back-to-pages">Facebook Pages</a>
-                        <span class="breadcrumb-separator">/</span>
-                        <span id="current-page-name"></span>
-                    </div>
-                </div>
-                <div class="notification-icon">
-                    <i class="fas fa-bell notification-bell"></i>
-                    <div class="notification-badge" id="notification-count-ads">0</div>
-                </div>
-            </div>
-
-            <div class="table-container">
-                <div class="page-header">
-                    <h2 id="ads-page-title">Ads</h2>
-                    <button class="action-btn add-btn" id="add-ad-btn">
-                        <i class="fas fa-plus"></i> Add Ad
-                    </button>
-                </div>
-                <table id="ads-table">
-                    <thead>
-                        <tr>
-                            <th>Ad Name</th>
-                            <th>Ad Link</th>
-                            <th>Added Date</th>
-                            <th>Running Since</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Ads will be loaded here dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Page Modal -->
-    <div class="modal" id="add-page-modal">
+    <!-- Add New Facebook Page Modal -->
+    <div id="addPageModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add New Page</h2>
-                <button class="close-btn">&times;</button>
-            </div>
-            <form id="add-page-form">
+            <span class="close-button">&times;</span>
+            <h2>Add New Facebook Page</h2>
+            <form id="addPageForm">
                 <div class="form-group">
-                    <label for="page-name">Page Name *</label>
-                    <input type="text" id="page-name" required>
+                    <label for="pageName">Page Name:</label>
+                    <input type="text" id="pageName" required>
                 </div>
                 <div class="form-group">
-                    <label for="website-link">Website Link (optional)</label>
-                    <input type="url" id="website-link">
+                    <label for="websiteLink">Website Link (Optional):</label>
+                    <input type="url" id="websiteLink">
                 </div>
                 <div class="form-group">
-                    <label for="added-date">Added Date</label>
-                    <input type="date" id="added-date">
+                    <label for="pageAddedDate">Added Date:</label>
+                    <input type="date" id="pageAddedDate" required>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="submit-btn">Save Page</button>
-                </div>
+                <button type="submit" class="button primary-button"><i class="fas fa-plus-circle"></i> Add Page</button>
             </form>
         </div>
     </div>
 
-    <!-- Add Ad Modal -->
-    <div class="modal" id="add-ad-modal">
+    <!-- Add New Ad Modal -->
+    <div id="addAdModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add New Ad</h2>
-                <button class="close-btn">&times;</button>
-            </div>
-            <form id="add-ad-form">
-                <input type="hidden" id="ad-page-id">
+            <span class="close-button">&times;</span>
+            <h2>Add New Ad</h2>
+            <form id="addAdForm">
                 <div class="form-group">
-                    <label for="ad-name">Ad Name *</label>
-                    <input type="text" id="ad-name" required>
+                    <label for="adPageSelect">Facebook Page:</label>
+                    <select id="adPageSelect" required></select>
                 </div>
                 <div class="form-group">
-                    <label for="ad-link">Ad Link (Meta Ad Library) *</label>
-                    <input type="url" id="ad-link" required>
+                    <label for="adName">Ad Name / Description:</label>
+                    <input type="text" id="adName" required>
                 </div>
                 <div class="form-group">
-                    <label for="ad-added-date">Added Date</label>
-                    <input type="date" id="ad-added-date">
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="submit-btn">Save Ad</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Edit Page Modal -->
-    <div class="modal" id="edit-page-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Page</h2>
-                <button class="close-btn">&times;</button>
-            </div>
-            <form id="edit-page-form">
-                <input type="hidden" id="edit-page-id">
-                <div class="form-group">
-                    <label for="edit-page-name">Page Name *</label>
-                    <input type="text" id="edit-page-name" required>
+                    <label for="adLink">Ad Link (Meta Ad Library):</label>
+                    <input type="url" id="adLink" required>
                 </div>
                 <div class="form-group">
-                    <label for="edit-website-link">Website Link (optional)</label>
-                    <input type="url" id="edit-website-link">
+                    <label for="adAddedDate">Added Date:</label>
+                    <input type="date" id="adAddedDate" required>
                 </div>
-                <div class="form-group">
-                    <label for="edit-added-date">Added Date</label>
-                    <input type="date" id="edit-added-date">
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="submit-btn">Update Page</button>
-                </div>
+                <button type="submit" class="button primary-button"><i class="fas fa-plus-circle"></i> Add Ad</button>
             </form>
         </div>
     </div>
 
     <!-- Edit Ad Modal -->
-    <div class="modal" id="edit-ad-modal">
+    <div id="editAdModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Ad</h2>
-                <button class="close-btn">&times;</button>
-            </div>
-            <form id="edit-ad-form">
-                <input type="hidden" id="edit-ad-id">
-                <input type="hidden" id="edit-ad-page-id">
+            <span class="close-button">&times;</span>
+            <h2>Edit Ad</h2>
+            <form id="editAdForm">
+                <input type="hidden" id="editAdId">
+                <input type="hidden" id="editAdPageId">
                 <div class="form-group">
-                    <label for="edit-ad-name">Ad Name *</label>
-                    <input type="text" id="edit-ad-name" required>
+                    <label for="editAdName">Ad Name / Description:</label>
+                    <input type="text" id="editAdName" required>
                 </div>
                 <div class="form-group">
-                    <label for="edit-ad-link">Ad Link (Meta Ad Library) *</label>
-                    <input type="url" id="edit-ad-link" required>
+                    <label for="editAdLink">Ad Link (Meta Ad Library):</label>
+                    <input type="url" id="editAdLink" required>
                 </div>
                 <div class="form-group">
-                    <label for="edit-ad-added-date">Added Date</label>
-                    <input type="date" id="edit-ad-added-date">
+                    <label for="editAdAddedDate">Added Date:</label>
+                    <input type="date" id="editAdAddedDate" required>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="submit-btn">Update Ad</button>
-                </div>
+                <button type="submit" class="button primary-button"><i class="fas fa-save"></i> Save Changes</button>
             </form>
         </div>
     </div>
 
-    <!-- Notification Modal -->
-    <div class="modal" id="notification-modal">
-        <div class="modal-content notification-modal">
-            <div class="modal-header">
-                <h2>Notifications</h2>
-                <button class="close-btn">&times;</button>
+    <!-- Notification List Modal -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Notifications</h2>
+            <div id="notificationList" class="notification-list">
+                <!-- Notifications will be dynamically added here -->
             </div>
-            <div id="notification-list">
-                <!-- Notifications will be loaded here dynamically -->
-                <div class="notification-item">
-                    <div class="notification-title">No new notifications</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div class="modal" id="confirm-modal">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <h2 id="confirm-title">Confirm Action</h2>
-                <button class="close-btn">&times;</button>
-            </div>
-            <div style="padding: 20px;">
-                <p id="confirm-message">Are you sure you want to perform this action?</p>
-            </div>
-            <div class="modal-footer" style="justify-content: space-between;">
-                <button class="submit-btn" style="background-color: var(--dark-gray);" id="confirm-cancel">Cancel</button>
-                <button class="submit-btn" style="background-color: var(--error-color);" id="confirm-delete">Delete</button>
-            </div>
+            <button class="button secondary-button" id="clearNotificationsBtn">Clear All</button>
         </div>
     </div>
 
     <script>
-        // Global variables
-        let pagesData = [];
-        let adsData = [];
-        let notifications = [];
-        let currentPageId = null;
+        document.addEventListener('DOMContentLoaded', () => {
+            // IMPORTANT: Replace with your deployed Google Apps Script Web App URL
+            // এই URL টি আপনার Google Apps Script Deployment থেকে পাওয়া যাবে।
+            // যদি আপনি এটি পরিবর্তন না করেন, তাহলে অ্যাপটি কাজ করবে না।
+            const SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'; 
 
-        // DOM Elements
-        const dashboardPage = document.getElementById('dashboard-page');
-        const pagesPage = document.getElementById('pages-page');
-        const adsPage = document.getElementById('ads-page');
-        const menuItems = document.querySelectorAll('.menu-item');
-        const notificationIcons = document.querySelectorAll('.notification-icon');
-        const notificationBadges = document.querySelectorAll('.notification-badge');
-        const notificationModal = document.getElementById('notification-modal');
-        const notificationList = document.getElementById('notification-list');
-        const addPageBtn = document.getElementById('add-page-btn');
-        const addPageModal = document.getElementById('add-page-modal');
-        const addPageForm = document.getElementById('add-page-form');
-        const addAdBtn = document.getElementById('add-ad-btn');
-        const addAdModal = document.getElementById('add-ad-modal');
-        const addAdForm = document.getElementById('add-ad-form');
-        const editPageModal = document.getElementById('edit-page-modal');
-        const editPageForm = document.getElementById('edit-page-form');
-        const editAdModal = document.getElementById('edit-ad-modal');
-        const editAdForm = document.getElementById('edit-ad-form');
-        const confirmModal = document.getElementById('confirm-modal');
-        const backToPages = document.getElementById('back-to-pages');
-        const currentPageName = document.getElementById('current-page-name');
-        const adsPageTitle = document.getElementById('ads-page-title');
-        const totalPagesElement = document.getElementById('total-pages');
-        const totalAdsElement = document.getElementById('total-ads');
-        const adsOver7DaysElement = document.getElementById('ads-over-7-days');
-        const recentAdsTable = document.getElementById('recent-ads-table').querySelector('tbody');
-        const pagesTable = document.getElementById('pages-table').querySelector('tbody');
-        const adsTable = document.getElementById('ads-table').querySelector('tbody');
+            // DOM Elements
+            const contentArea = document.getElementById('content-area');
+            const pageTitle = document.getElementById('page-title');
+            const notificationIcon = document.getElementById('notification-icon');
+            const notificationBadge = notificationIcon.querySelector('.notification-badge');
+            const sidebarNav = document.querySelector('.navigation ul');
 
-        // Google Apps Script URL (replace with your deployed URL)
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbx73wPmitsp7Vj_ylTH8a9Dpb47b0dWXP2zWVmqBjAuSWdZDu0j2WsREzhlOGaCIfmLyw/exec';
+            // Modal Elements
+            const addPageModal = document.getElementById('addPageModal');
+            const addPageForm = document.getElementById('addPageForm');
+            const addAdModal = document.getElementById('addAdModal');
+            const addAdForm = document.getElementById('addAdForm');
+            const editAdModal = document.getElementById('editAdModal');
+            const editAdForm = document.getElementById('editAdForm');
+            const notificationModal = document.getElementById('notificationModal');
+            const notificationList = document.getElementById('notificationList');
+            const clearNotificationsBtn = document.getElementById('clearNotificationsBtn');
 
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set today's date as default in date fields
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('added-date').value = today;
-            document.getElementById('ad-added-date').value = today;
-            
-            // Load data
-            loadData();
-            
-            // Set up event listeners
-            setupEventListeners();
-        });
+            // Global data storage
+            let allPages = [];
+            let allAds = [];
+            let notifications = []; // To store notifications
+            let currentFacebookPageId = null; // To keep track of the current page being viewed for ads
 
-        // Set up all event listeners
-        function setupEventListeners() {
-            // Menu navigation
-            menuItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    navigateTo(page);
+            // Helper function to open any modal
+            function openModal(modalId) {
+                document.getElementById(modalId).style.display = 'flex';
+            }
+
+            // Helper function to close any modal
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            }
+
+            // Attach close button functionality to all modals
+            document.querySelectorAll('.modal .close-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    closeModal(event.target.closest('.modal').id);
                 });
             });
 
-            // Notification icons
-            notificationIcons.forEach(icon => {
-                icon.addEventListener('click', function() {
-                    showNotifications();
-                });
-            });
-
-            // Modal close buttons
-            document.querySelectorAll('.close-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const modal = this.closest('.modal');
-                    closeModal(modal);
-                });
-            });
-
-            // Click outside modal to close
-            window.addEventListener('click', function(event) {
+            // Close modal if clicked outside the modal content
+            window.addEventListener('click', (event) => {
                 if (event.target.classList.contains('modal')) {
-                    closeModal(event.target);
+                    closeModal(event.target.id);
                 }
             });
 
-            // Add page button
-            addPageBtn.addEventListener('click', function() {
-                openModal(addPageModal);
-            });
-
-            // Add ad button
-            addAdBtn.addEventListener('click', function() {
-                document.getElementById('ad-page-id').value = currentPageId;
-                openModal(addAdModal);
-            });
-
-            // Back to pages button
-            backToPages.addEventListener('click', function(e) {
-                e.preventDefault();
-                navigateTo('pages');
-            });
-
-            // Form submissions
-            addPageForm.addEventListener('submit', handleAddPage);
-            addAdForm.addEventListener('submit', handleAddAd);
-            editPageForm.addEventListener('submit', handleEditPage);
-            editAdForm.addEventListener('submit', handleEditAd);
-
-            // Confirmation modal
-            document.getElementById('confirm-cancel').addEventListener('click', function() {
-                closeModal(confirmModal);
-            });
-            document.getElementById('confirm-delete').addEventListener('click', function() {
-                const id = confirmModal.getAttribute('data-id');
-                const type = confirmModal.getAttribute('data-type');
-                
-                if (type === 'page') {
-                    deletePage(id);
-                } else if (type === 'ad') {
-                    deleteAd(id);
+            // --- API Calls to Google Apps Script Backend ---
+            async function fetchData(path, method = 'GET', data = null, id = null, queryParams = {}) {
+                // Check if SCRIPT_URL is still the placeholder
+                if (SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                    console.error("Error: SCRIPT_URL has not been updated. Please replace 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' with your actual Google Apps Script Web App URL.");
+                    alert("Configuration Error: Please update the 'SCRIPT_URL' in the code with your Google Apps Script Web App URL.");
+                    return { status: 'error', message: 'Configuration Error: SCRIPT_URL not set.' };
                 }
-                
-                closeModal(confirmModal);
-            });
-        }
 
-        // Navigation function
-        function navigateTo(page) {
-            // Update active menu item
-            menuItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('data-page') === page) {
-                    item.classList.add('active');
+                let url = `${SCRIPT_URL}?path=${path}`;
+                if (id) url += `&id=${id}`; // Add ID for specific resource operations (PUT, DELETE)
+                // Add any additional query parameters
+                for (const key in queryParams) {
+                    url += `&${key}=${queryParams[key]}`;
                 }
-            });
 
-            // Show the correct page
-            dashboardPage.style.display = 'none';
-            pagesPage.style.display = 'none';
-            adsPage.style.display = 'none';
-
-            if (page === 'dashboard') {
-                dashboardPage.style.display = 'block';
-            } else if (page === 'pages') {
-                pagesPage.style.display = 'block';
-                loadPages();
-            } else if (page === 'ads') {
-                adsPage.style.display = 'block';
-            }
-        }
-
-        // Load all data
-        function loadData() {
-            fetch(`${scriptUrl}?action=getAllData`)
-                .then(response => response.json())
-                .then(data => {
-                    pagesData = data.pages || [];
-                    adsData = data.ads || [];
-                    
-                    // Update dashboard stats
-                    updateDashboardStats();
-                    
-                    // Load recent ads
-                    loadRecentAds();
-                    
-                    // Check for notifications
-                    checkNotifications();
-                })
-                .catch(error => {
-                    console.error('Error loading data:', error);
-                });
-        }
-
-        // Load pages data
-        function loadPages() {
-            fetch(`${scriptUrl}?action=getPages`)
-                .then(response => response.json())
-                .then(data => {
-                    pagesData = data || [];
-                    renderPagesTable();
-                })
-                .catch(error => {
-                    console.error('Error loading pages:', error);
-                });
-        }
-
-        // Load ads for a specific page
-        function loadAds(pageId) {
-            currentPageId = pageId;
-            
-            // Find the page to get its name
-            const page = pagesData.find(p => p.page_id == pageId);
-            if (page) {
-                currentPageName.textContent = page.page_name;
-                adsPageTitle.textContent = `Ads for ${page.page_name}`;
-            }
-            
-            fetch(`${scriptUrl}?action=getAds&pageId=${pageId}`)
-                .then(response => response.json())
-                .then(data => {
-                    adsData = data || [];
-                    renderAdsTable();
-                    navigateTo('ads');
-                })
-                .catch(error => {
-                    console.error('Error loading ads:', error);
-                });
-        }
-
-        // Load recent ads for dashboard
-        function loadRecentAds() {
-            // Sort ads by date (newest first)
-            const sortedAds = [...adsData].sort((a, b) => {
-                return new Date(b.added_date) - new Date(a.added_date);
-            });
-            
-            // Get the 10 most recent ads
-            const recentAds = sortedAds.slice(0, 10);
-            
-            renderRecentAdsTable(recentAds);
-        }
-
-        // Update dashboard statistics
-        function updateDashboardStats() {
-            totalPagesElement.textContent = pagesData.length;
-            totalAdsElement.textContent = adsData.length;
-            
-            // Count ads running for more than 7 days
-            const today = new Date();
-            const adsOver7Days = adsData.filter(ad => {
-                const addedDate = new Date(ad.added_date);
-                const diffTime = today - addedDate;
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                return diffDays > 7;
-            });
-            
-            adsOver7DaysElement.textContent = adsOver7Days.length;
-        }
-
-        // Render pages table
-        function renderPagesTable() {
-            pagesTable.innerHTML = '';
-            
-            if (pagesData.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="4" style="text-align: center;">No pages found. Add your first page!</td>`;
-                pagesTable.appendChild(row);
-                return;
-            }
-            
-            pagesData.forEach(page => {
-                const row = document.createElement('tr');
-                
-                // Format website link
-                let websiteLink = '-';
-                if (page.website) {
-                    websiteLink = `<a href="${page.website}" target="_blank">${page.website}</a>`;
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                };
+                // Attach data for POST/PUT requests
+                if (data && (method === 'POST' || method === 'PUT')) {
+                    options.body = JSON.stringify(data);
                 }
-                
-                // Format date
-                const addedDate = new Date(page.added_date);
-                const formattedDate = addedDate.toLocaleDateString();
-                
-                row.innerHTML = `
-                    <td>${page.page_name}</td>
-                    <td>${websiteLink}</td>
-                    <td>${formattedDate}</td>
-                    <td>
-                        <button class="action-btn view-btn view-ads-btn" data-id="${page.page_id}">
-                            <i class="fas fa-eye"></i> View Ads
-                        </button>
-                        <button class="action-btn edit-btn edit-page-btn" data-id="${page.page_id}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="action-btn delete-btn delete-page-btn" data-id="${page.page_id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </td>
-                `;
-                
-                pagesTable.appendChild(row);
-            });
-            
-            // Add event listeners to action buttons
-            document.querySelectorAll('.view-ads-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const pageId = this.getAttribute('data-id');
-                    loadAds(pageId);
-                });
-            });
-            
-            document.querySelectorAll('.edit-page-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const pageId = this.getAttribute('data-id');
-                    editPage(pageId);
-                });
-            });
-            
-            document.querySelectorAll('.delete-page-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const pageId = this.getAttribute('data-id');
-                    showConfirmModal('Delete Page', 'Are you sure you want to delete this page and all its ads?', pageId, 'page');
-                });
-            });
-        }
 
-        // Render ads table
-        function renderAdsTable() {
-            adsTable.innerHTML = '';
-            
-            if (adsData.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="5" style="text-align: center;">No ads found for this page. Add your first ad!</td>`;
-                adsTable.appendChild(row);
-                return;
-            }
-            
-            const today = new Date();
-            
-            adsData.forEach(ad => {
-                const row = document.createElement('tr');
-                
-                // Format date
-                const addedDate = new Date(ad.added_date);
-                const formattedDate = addedDate.toLocaleDateString();
-                
-                // Calculate days running
-                const diffTime = today - addedDate;
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                const daysRunning = diffDays === 0 ? 'Today' : `${diffDays} days`;
-                
-                row.innerHTML = `
-                    <td>${ad.ad_name}</td>
-                    <td><a href="${ad.ad_link}" target="_blank">View Ad</a></td>
-                    <td>${formattedDate}</td>
-                    <td>${daysRunning}</td>
-                    <td>
-                        <button class="action-btn edit-btn edit-ad-btn" data-id="${ad.ad_id}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="action-btn delete-btn delete-ad-btn" data-id="${ad.ad_id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </td>
-                `;
-                
-                adsTable.appendChild(row);
-            });
-            
-            // Add event listeners to action buttons
-            document.querySelectorAll('.edit-ad-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const adId = this.getAttribute('data-id');
-                    editAd(adId);
-                });
-            });
-            
-            document.querySelectorAll('.delete-ad-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const adId = this.getAttribute('data-id');
-                    showConfirmModal('Delete Ad', 'Are you sure you want to delete this ad?', adId, 'ad');
-                });
-            });
-        }
-
-        // Render recent ads table
-        function renderRecentAdsTable(ads) {
-            recentAdsTable.innerHTML = '';
-            
-            if (ads.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="4" style="text-align: center;">No ads found. Add your first ad!</td>`;
-                recentAdsTable.appendChild(row);
-                return;
-            }
-            
-            const today = new Date();
-            
-            ads.forEach(ad => {
-                const row = document.createElement('tr');
-                
-                // Find the page name
-                const page = pagesData.find(p => p.page_id == ad.page_id);
-                const pageName = page ? page.page_name : 'Unknown Page';
-                
-                // Calculate days running
-                const addedDate = new Date(ad.added_date);
-                const diffTime = today - addedDate;
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                const daysRunning = diffDays === 0 ? 'Today' : `${diffDays} days`;
-                
-                row.innerHTML = `
-                    <td>${ad.ad_name}</td>
-                    <td>${pageName}</td>
-                    <td>${daysRunning}</td>
-                    <td>
-                        <button class="action-btn view-btn view-ad-btn" data-id="${ad.page_id}">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </td>
-                `;
-                
-                recentAdsTable.appendChild(row);
-            });
-            
-            // Add event listeners to view buttons
-            document.querySelectorAll('.view-ad-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const pageId = this.getAttribute('data-id');
-                    loadAds(pageId);
-                });
-            });
-        }
-
-        // Handle add page form submission
-        function handleAddPage(e) {
-            e.preventDefault();
-            
-            const pageName = document.getElementById('page-name').value;
-            const websiteLink = document.getElementById('website-link').value;
-            const addedDate = document.getElementById('added-date').value;
-            
-            const pageData = {
-                page_name: pageName,
-                website: websiteLink || '',
-                added_date: addedDate
-            };
-            
-            fetch(scriptUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'addPage',
-                    data: pageData
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    closeModal(addPageModal);
-                    addPageForm.reset();
-                    loadData();
-                    loadPages();
-                } else {
-                    alert('Error adding page: ' + (data.message || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error adding page');
-            });
-        }
-
-        // Handle add ad form submission
-        function handleAddAd(e) {
-            e.preventDefault();
-            
-            const pageId = document.getElementById('ad-page-id').value;
-            const adName = document.getElementById('ad-name').value;
-            const adLink = document.getElementById('ad-link').value;
-            const addedDate = document.getElementById('ad-added-date').value;
-            
-            const adData = {
-                page_id: pageId,
-                ad_name: adName,
-                ad_link: adLink,
-                added_date: addedDate
-            };
-            
-            fetch(scriptUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'addAd',
-                    data: adData
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    closeModal(addAdModal);
-                    addAdForm.reset();
-                    loadAds(pageId);
-                    loadData(); // Refresh dashboard stats
-                } else {
-                    alert('Error adding ad: ' + (data.message || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error adding ad');
-            });
-        }
-
-        // Edit page
-        function editPage(pageId) {
-            const page = pagesData.find(p => p.page_id == pageId);
-            if (!page) return;
-            
-            document.getElementById('edit-page-id').value = page.page_id;
-            document.getElementById('edit-page-name').value = page.page_name;
-            document.getElementById('edit-website-link').value = page.website || '';
-            document.getElementById('edit-added-date').value = page.added_date.split('T')[0];
-            
-            openModal(editPageModal);
-        }
-
-        // Handle edit page form submission
-        function handleEditPage(e) {
-            e.preventDefault();
-            
-            const pageId = document.getElementById('edit-page-id').value;
-            const pageName = document.getElementById('edit-page-name').value;
-            const websiteLink = document.getElementById('edit-website-link').value;
-            const addedDate = document.getElementById('edit-added-date').value;
-            
-            const pageData = {
-                page_id: pageId,
-                page_name: pageName,
-                website: websiteLink || '',
-                added_date: addedDate
-            };
-            
-            fetch(scriptUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'updatePage',
-                    data: pageData
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    closeModal(editPageModal);
-                    loadPages();
-                    if (currentPageId == pageId) {
-                        loadAds(pageId);
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        // Attempt to parse error message from response body
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
                     }
-                } else {
-                    alert('Error updating page: ' + (data.message || 'Unknown error'));
+                    return await response.json(); // Return JSON response
+                } catch (error) {
+                    console.error(`Error fetching ${path}:`, error);
+                    alert(`Failed to perform action: ${error.message}`); // User-friendly alert
+                    return { status: 'error', message: error.message };
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error updating page');
-            });
-        }
+            }
 
-        // Edit ad
-        function editAd(adId) {
-            const ad = adsData.find(a => a.ad_id == adId);
-            if (!ad) return;
-            
-            document.getElementById('edit-ad-id').value = ad.ad_id;
-            document.getElementById('edit-ad-page-id').value = ad.page_id;
-            document.getElementById('edit-ad-name').value = ad.ad_name;
-            document.getElementById('edit-ad-link').value = ad.ad_link;
-            document.getElementById('edit-ad-added-date').value = ad.added_date.split('T')[0];
-            
-            openModal(editAdModal);
-        }
+            // --- Data Loading & Caching ---
+            async function loadAllData() {
+                showLoading(); // Show loading indicator
+                const pagesRes = await fetchData('pages'); // Fetch all pages
+                const adsRes = await fetchData('ads');     // Fetch all ads
+                hideLoading(); // Hide loading indicator
 
-        // Handle edit ad form submission
-        function handleEditAd(e) {
-            e.preventDefault();
-            
-            const adId = document.getElementById('edit-ad-id').value;
-            const pageId = document.getElementById('edit-ad-page-id').value;
-            const adName = document.getElementById('edit-ad-name').value;
-            const adLink = document.getElementById('edit-ad-link').value;
-            const addedDate = document.getElementById('edit-ad-added-date').value;
-            
-            const adData = {
-                ad_id: adId,
-                page_id: pageId,
-                ad_name: adName,
-                ad_link: adLink,
-                added_date: addedDate
-            };
-            
-            fetch(scriptUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'updateAd',
-                    data: adData
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    closeModal(editAdModal);
-                    loadAds(pageId);
-                    loadData(); // Refresh dashboard stats
+                if (pagesRes.status === 'success') {
+                    allPages = pagesRes.data;
                 } else {
-                    alert('Error updating ad: ' + (data.message || 'Unknown error'));
+                    allPages = [];
+                    console.error('Failed to load pages:', pagesRes.message);
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error updating ad');
-            });
-        }
 
-        // Delete page
-        function deletePage(pageId) {
-            fetch(scriptUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'deletePage',
-                    pageId: pageId
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    loadPages();
-                    loadData(); // Refresh dashboard stats
-                    
-                    // If we're on the ads page for this page, go back to pages
-                    if (currentPageId == pageId) {
-                        navigateTo('pages');
+                if (adsRes.status === 'success') {
+                    allAds = adsRes.data;
+                } else {
+                    allAds = [];
+                    console.error('Failed to load ads:', adsRes.message);
+                }
+                checkNotifications(); // After loading, check for new notifications
+            }
+
+            // --- Notification System ---
+            function checkNotifications() {
+                const newNotifications = [];
+                const today = new Date();
+                const existingAdIds = new Set(allAds.map(ad => ad.ad_id));
+
+                // Check for deleted ads by comparing with previously stored ads
+                const previousAds = JSON.parse(localStorage.getItem('previousAdsData') || '[]');
+                const previousAdIds = new Set(previousAds.map(ad => ad.ad_id));
+
+                previousAds.forEach(prevAd => {
+                    if (!existingAdIds.has(prevAd.ad_id)) {
+                        newNotifications.push({
+                            adName: prevAd.ad_name,
+                            pageName: allPages.find(p => p.page_id === prevAd.page_id)?.page_name || 'Unknown Page',
+                            actionType: 'deleted',
+                            date: new Date().toLocaleDateString(),
+                            timestamp: Date.now()
+                        });
                     }
+                });
+
+                // Store current ads for the next comparison
+                localStorage.setItem('previousAdsData', JSON.stringify(allAds));
+
+                // Check for ads running for specific durations
+                allAds.forEach(ad => {
+                    const addedDate = new Date(ad.added_date);
+                    const diffTime = Math.abs(today - addedDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Calculate days difference
+
+                    let notificationType = '';
+                    if (diffDays >= 7 && diffDays < 10) {
+                        notificationType = '7+ Days';
+                    } else if (diffDays >= 10 && diffDays < 15) {
+                        notificationType = '10+ Days';
+                    } else if (diffDays >= 15 && diffDays < 30) {
+                        notificationType = '15+ Days';
+                    } else if (diffDays >= 30) {
+                        notificationType = '30+ Days';
+                    }
+
+                    if (notificationType) {
+                        newNotifications.push({
+                            adName: ad.ad_name,
+                            pageName: allPages.find(p => p.page_id === ad.page_id)?.page_name || 'Unknown Page',
+                            actionType: notificationType,
+                            date: new Date().toLocaleDateString(),
+                            timestamp: Date.now()
+                        });
+                    }
+                });
+
+                // Filter out duplicate notifications and combine with existing ones
+                const existingNotifications = JSON.parse(localStorage.getItem('adNotifications') || '[]');
+                const combinedNotifications = [...existingNotifications];
+
+                newNotifications.forEach(newNotif => {
+                    const isDuplicate = combinedNotifications.some(existingNotif =>
+                        existingNotif.adName === newNotif.adName &&
+                        existingNotif.pageName === newNotif.pageName &&
+                        existingNotif.actionType === newNotif.actionType &&
+                        existingNotif.date === newNotif.date // Check for same day to avoid re-notifying for same event
+                    );
+                    if (!isDuplicate) {
+                        combinedNotifications.push(newNotif);
+                    }
+                });
+
+                // Sort notifications by timestamp (newest first)
+                combinedNotifications.sort((a, b) => b.timestamp - a.timestamp);
+
+                notifications = combinedNotifications;
+                localStorage.setItem('adNotifications', JSON.stringify(notifications)); // Save to local storage
+                updateNotificationBadge(); // Update the UI badge
+            }
+
+            // Update the notification badge count and visibility
+            function updateNotificationBadge() {
+                if (notifications.length > 0) {
+                    notificationBadge.textContent = notifications.length;
+                    notificationBadge.classList.remove('hidden');
                 } else {
-                    alert('Error deleting page: ' + (data.message || 'Unknown error'));
+                    notificationBadge.classList.add('hidden');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error deleting page');
-            });
-        }
+            }
 
-        // Delete ad
-        function deleteAd(adId) {
-            fetch(scriptUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'deleteAd',
-                    adId: adId
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    loadAds(currentPageId);
-                    loadData(); // Refresh dashboard stats
-                } else {
-                    alert('Error deleting ad: ' + (data.message || 'Unknown error'));
+            // Render notifications in the modal
+            function renderNotifications() {
+                notificationList.innerHTML = ''; // Clear previous notifications
+                if (notifications.length === 0) {
+                    notificationList.innerHTML = '<p class="text-center">No new notifications.</p>';
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error deleting ad');
-            });
-        }
 
-        // Check for notifications
-        function checkNotifications() {
-            notifications = [];
-            const today = new Date();
-            
-            // Check for ads running more than 7 days
-            adsData.forEach(ad => {
-                const addedDate = new Date(ad.added_date);
-                const diffTime = today - addedDate;
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                
-                if (diffDays >= 30) {
-                    notifications.push({
-                        type: '30days',
-                        ad_name: ad.ad_name,
-                        page_id: ad.page_id,
-                        date: addedDate
-                    });
-                } else if (diffDays >= 15) {
-                    notifications.push({
-                        type: '15days',
-                        ad_name: ad.ad_name,
-                        page_id: ad.page_id,
-                        date: addedDate
-                    });
-                } else if (diffDays >= 10) {
-                    notifications.push({
-                        type: '10days',
-                        ad_name: ad.ad_name,
-                        page_id: ad.page_id,
-                        date: addedDate
-                    });
-                } else if (diffDays > 7) {
-                    notifications.push({
-                        type: '7days',
-                        ad_name: ad.ad_name,
-                        page_id: ad.page_id,
-                        date: addedDate
-                    });
-                }
-            });
-            
-            // Update notification badges
-            updateNotificationBadges();
-        }
-
-        // Update notification badges
-        function updateNotificationBadges() {
-            const count = notifications.length;
-            notificationBadges.forEach(badge => {
-                badge.textContent = count;
-                if (count > 0) {
-                    badge.style.display = 'flex';
-                } else {
-                    badge.style.display = 'none';
-                }
-            });
-        }
-
-        // Show notifications modal
-        function showNotifications() {
-            notificationList.innerHTML = '';
-            
-            if (notifications.length === 0) {
-                const item = document.createElement('div');
-                item.className = 'notification-item';
-                item.innerHTML = '<div class="notification-title">No new notifications</div>';
-                notificationList.appendChild(item);
-            } else {
                 notifications.forEach(notif => {
                     const item = document.createElement('div');
-                    item.className = 'notification-item';
-                    
-                    // Find the page name
-                    const page = pagesData.find(p => p.page_id == notif.page_id);
-                    const pageName = page ? page.page_name : 'Unknown Page';
-                    
-                    // Format date
-                    const formattedDate = notif.date.toLocaleDateString();
-                    
-                    // Set notification text based on type
-                    let actionText = '';
                     let typeClass = '';
-                    
-                    if (notif.type === '7days') {
-                        actionText = 'Ad running for more than 7 days';
-                        typeClass = 'type-7days';
-                    } else if (notif.type === '10days') {
-                        actionText = 'Ad running for more than 10 days';
-                        typeClass = 'type-10days';
-                    } else if (notif.type === '15days') {
-                        actionText = 'Ad running for more than 15 days';
-                        typeClass = 'type-15days';
-                    } else if (notif.type === '30days') {
-                        actionText = 'Ad running for more than 30 days';
-                        typeClass = 'type-30days';
-                    }
-                    
+                    // Assign CSS class based on notification type for styling
+                    if (notif.actionType === 'deleted') typeClass = 'type-deleted';
+                    else if (notif.actionType === '7+ Days') typeClass = 'type-7-days';
+                    else if (notif.actionType === '10+ Days') typeClass = 'type-10-days';
+                    else if (notif.actionType === '15+ Days') typeClass = 'type-15-days';
+                    else if (notif.actionType === '30+ Days') typeClass = 'type-30-days';
+
+                    item.className = `notification-item ${typeClass}`;
                     item.innerHTML = `
-                        <div class="notification-title">${notif.ad_name}</div>
-                        <div class="notification-meta">
-                            <span>${pageName}</span>
-                            <span class="notification-type ${typeClass}">${actionText}</span>
-                        </div>
-                        <div class="notification-meta">
-                            <span>Added: ${formattedDate}</span>
+                        <span class="ad-name">${notif.adName}</span>
+                        <span class="page-name">Page: ${notif.pageName}</span>
+                        <div class="details">
+                            <span class="action-type ${typeClass}">Action: ${notif.actionType}</span>
+                            <span class="date">Date: ${notif.date}</span>
                         </div>
                     `;
-                    
                     notificationList.appendChild(item);
                 });
             }
-            
-            openModal(notificationModal);
-        }
 
-        // Show confirmation modal
-        function showConfirmModal(title, message, id, type) {
-            document.getElementById('confirm-title').textContent = title;
-            document.getElementById('confirm-message').textContent = message;
-            confirmModal.setAttribute('data-id', id);
-            confirmModal.setAttribute('data-type', type);
-            openModal(confirmModal);
-        }
+            // Event listener for notification icon click
+            notificationIcon.addEventListener('click', () => {
+                renderNotifications();
+                openModal('notificationModal');
+            });
 
-        // Open modal
-        function openModal(modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
+            // Event listener for clearing all notifications
+            clearNotificationsBtn.addEventListener('click', () => {
+                notifications = [];
+                localStorage.removeItem('adNotifications'); // Clear from local storage
+                updateNotificationBadge();
+                renderNotifications();
+            });
 
-        // Close modal
-        function closeModal(modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+            // --- Page Rendering Functions ---
+            // Show a simple loading spinner
+            function showLoading() {
+                contentArea.innerHTML = '<div class="text-center" style="padding: 50px;"><i class="fas fa-spinner fa-spin" style="font-size: 3em; color: var(--primary-color);"></i><p style="margin-top: 20px;">Loading data...</p></div>';
+            }
+
+            // Hide loading (by replacing content, or a more sophisticated method could be used)
+            function hideLoading() {
+                // In this simple app, content replacement handles hiding.
+                // For more complex apps, you might have a dedicated loading overlay.
+            }
+
+            // Render the Dashboard page
+            async function renderDashboard() {
+                pageTitle.textContent = 'Dashboard';
+                await loadAllData(); // Load latest data for stats
+
+                const totalPages = allPages.length;
+                const totalAds = allAds.length;
+
+                const today = new Date();
+                // Calculate ads running more than 7 days
+                const adsRunningMoreThan7Days = allAds.filter(ad => {
+                    const addedDate = new Date(ad.added_date);
+                    const diffTime = Math.abs(today - addedDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return diffDays > 7;
+                }).length;
+
+                contentArea.innerHTML = `
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <div class="icon"><i class="fas fa-file-alt"></i></div>
+                            <div class="value">${totalPages}</div>
+                            <div class="label">Total Facebook Pages</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon"><i class="fas fa-bullhorn"></i></div>
+                            <div class="value">${totalAds}</div>
+                            <div class="label">Total Ads Added</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon"><i class="fas fa-hourglass-half"></i></div>
+                            <div class="value">${adsRunningMoreThan7Days}</div>
+                            <div class="label">Ads Running More Than 7 Days</div>
+                        </div>
+                    </div>
+                    <!-- Optionally, you can add recent activity tables here -->
+                `;
+            }
+
+            // Render the Facebook Pages list page
+            async function renderFacebookPages() {
+                pageTitle.textContent = 'Facebook Pages';
+                await loadAllData(); // Ensure latest data for pages
+
+                let tableHtml = `
+                    <div class="data-table-container">
+                        <button class="button primary-button" id="addPageButton"><i class="fas fa-plus-circle"></i> Add Page</button>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Page Name</th>
+                                    <th>Website Link</th>
+                                    <th>Added Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                if (allPages.length === 0) {
+                    tableHtml += `
+                        <tr><td colspan="4" class="text-center">No Facebook pages added yet.</td></tr>
+                    `;
+                } else {
+                    allPages.forEach(page => {
+                        const websiteLink = page.website ? `<a href="${page.website}" target="_blank">${page.website}</a>` : 'N/A';
+                        tableHtml += `
+                            <tr>
+                                <td>${page.page_name}</td>
+                                <td>${websiteLink}</td>
+                                <td>${page.added_date}</td>
+                                <td class="action-buttons">
+                                    <button class="button view-ads-button" data-id="${page.page_id}" data-name="${page.page_name}"><i class="fas fa-eye"></i> View Ads</button>
+                                    <button class="button delete-button" data-id="${page.page_id}"><i class="fas fa-trash-alt"></i> Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                tableHtml += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                contentArea.innerHTML = tableHtml;
+
+                // Event listener for "Add Page" button
+                document.getElementById('addPageButton').addEventListener('click', () => {
+                    document.getElementById('pageAddedDate').valueAsDate = new Date(); // Set default date to today
+                    openModal('addPageModal');
+                });
+
+                // Event listeners for "View Ads" buttons
+                document.querySelectorAll('.view-ads-button').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        currentFacebookPageId = event.currentTarget.dataset.id; // Store current page ID
+                        const pageName = event.currentTarget.dataset.name;
+                        renderAdsForPage(currentFacebookPageId, pageName);
+                    });
+                });
+
+                // Event listeners for "Delete Page" buttons
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', async (event) => {
+                        const pageId = event.currentTarget.dataset.id;
+                        if (confirm('Are you sure you want to delete this page and all its associated ads?')) {
+                            showLoading();
+                            const res = await fetchData('pages', 'DELETE', null, pageId);
+                            if (res.status === 'success') {
+                                // Also delete associated ads from the Ads sheet
+                                const adsToDelete = allAds.filter(ad => ad.page_id === pageId);
+                                for (const ad of adsToDelete) {
+                                    await fetchData('ads', 'DELETE', null, ad.ad_id);
+                                }
+                                await renderFacebookPages(); // Re-render pages to reflect changes
+                                alert('Page and associated ads deleted successfully!');
+                            } else {
+                                hideLoading();
+                                alert('Failed to delete page.');
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Render ads for a specific Facebook page
+            async function renderAdsForPage(pageId, pageName) {
+                pageTitle.textContent = `Ads for ${pageName}`;
+                showLoading();
+                // Fetch ads specifically for the given pageId
+                const res = await fetchData('ads', 'GET', null, null, { page_id: pageId });
+                hideLoading();
+
+                let adsForPage = [];
+                if (res.status === 'success') {
+                    adsForPage = res.data;
+                } else {
+                    console.error('Failed to load ads for page:', res.message);
+                }
+
+                let tableHtml = `
+                    <div class="data-table-container">
+                        <button class="button primary-button" id="addAdButton"><i class="fas fa-plus-circle"></i> Add Ad</button>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Ad Name / Description</th>
+                                    <th>Ad Link</th>
+                                    <th>Added Date</th>
+                                    <th>Running Since</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                if (adsForPage.length === 0) {
+                    tableHtml += `
+                        <tr><td colspan="5" class="text-center">No ads added for this page yet.</td></tr>
+                    `;
+                } else {
+                    adsForPage.forEach(ad => {
+                        const addedDate = new Date(ad.added_date);
+                        const today = new Date();
+                        const diffTime = Math.abs(today - addedDate);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Calculate days running
+                        const runningSince = `${diffDays} Day${diffDays === 1 ? '' : 's'}`;
+
+                        tableHtml += `
+                            <tr>
+                                <td>${ad.ad_name}</td>
+                                <td><a href="${ad.ad_link}" target="_blank">View Ad</a></td>
+                                <td>${ad.added_date}</td>
+                                <td>${runningSince}</td>
+                                <td class="action-buttons">
+                                    <button class="button edit-button" data-id="${ad.ad_id}"
+                                        data-name="${ad.ad_name}" data-link="${ad.ad_link}"
+                                        data-date="${ad.added_date}" data-page-id="${ad.page_id}">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="button delete-button" data-id="${ad.ad_id}"><i class="fas fa-trash-alt"></i> Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                tableHtml += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                contentArea.innerHTML = tableHtml;
+
+                // Event listener for "Add Ad" button
+                document.getElementById('addAdButton').addEventListener('click', () => {
+                    // Populate the Facebook Page dropdown in the Add Ad modal
+                    const adPageSelect = document.getElementById('adPageSelect');
+                    adPageSelect.innerHTML = '';
+                    allPages.forEach(page => {
+                        const option = document.createElement('option');
+                        option.value = page.page_id;
+                        option.textContent = page.page_name;
+                        if (page.page_id === currentFacebookPageId) {
+                            option.selected = true; // Pre-select the current page
+                        }
+                        adPageSelect.appendChild(option);
+                    });
+                    document.getElementById('adAddedDate').valueAsDate = new Date(); // Set default date to today
+                    openModal('addAdModal');
+                });
+
+                // Event listeners for "Edit Ad" buttons
+                document.querySelectorAll('.edit-button').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        // Populate edit modal fields with current ad data
+                        const adId = event.currentTarget.dataset.id;
+                        const adName = event.currentTarget.dataset.name;
+                        const adLink = event.currentTarget.dataset.link;
+                        const adAddedDate = event.currentTarget.dataset.date;
+                        const adPageId = event.currentTarget.dataset.pageId;
+
+                        document.getElementById('editAdId').value = adId;
+                        document.getElementById('editAdPageId').value = adPageId;
+                        document.getElementById('editAdName').value = adName;
+                        document.getElementById('editAdLink').value = adLink;
+                        document.getElementById('editAdAddedDate').value = adAddedDate;
+                        openModal('editAdModal');
+                    });
+                });
+
+                // Event listeners for "Delete Ad" buttons
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', async (event) => {
+                        const adId = event.currentTarget.dataset.id;
+                        if (confirm('Are you sure you want to delete this ad?')) {
+                            showLoading();
+                            const res = await fetchData('ads', 'DELETE', null, adId);
+                            if (res.status === 'success') {
+                                alert('Ad deleted successfully!');
+                                // Reload ads for the current page after deletion
+                                const currentPage = allPages.find(p => p.page_id === currentFacebookPageId);
+                                await renderAdsForPage(currentFacebookPageId, currentPage?.page_name || 'Unknown Page');
+                            } else {
+                                hideLoading();
+                                alert('Failed to delete ad.');
+                            }
+                        }
+                    });
+                });
+            }
+
+            // --- Form Submission Handlers ---
+
+            // Handle Add Page form submission
+            addPageForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const pageName = document.getElementById('pageName').value;
+                const websiteLink = document.getElementById('websiteLink').value;
+                const addedDate = document.getElementById('pageAddedDate').value;
+
+                const newPage = {
+                    page_name: pageName,
+                    website: websiteLink,
+                    added_date: addedDate
+                };
+
+                closeModal('addPageModal');
+                showLoading();
+                const res = await fetchData('pages', 'POST', newPage);
+                if (res.status === 'success') {
+                    alert('Page added successfully!');
+                    addPageForm.reset(); // Clear form fields
+                    await renderFacebookPages(); // Re-render pages list
+                } else {
+                    hideLoading();
+                    alert('Failed to add page.');
+                }
+            });
+
+            // Handle Add Ad form submission
+            addAdForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const pageId = document.getElementById('adPageSelect').value;
+                const adName = document.getElementById('adName').value;
+                const adLink = document.getElementById('adLink').value;
+                const addedDate = document.getElementById('adAddedDate').value;
+
+                const newAd = {
+                    page_id: pageId,
+                    ad_name: adName,
+                    ad_link: adLink,
+                    added_date: addedDate
+                };
+
+                closeModal('addAdModal');
+                showLoading();
+                const res = await fetchData('ads', 'POST', newAd);
+                if (res.status === 'success') {
+                    alert('Ad added successfully!');
+                    addAdForm.reset(); // Clear form fields
+                    // Re-render ads for the current page
+                    const currentPage = allPages.find(p => p.page_id === currentFacebookPageId);
+                    await renderAdsForPage(currentFacebookPageId, currentPage?.page_name || 'Unknown Page');
+                } else {
+                    hideLoading();
+                    alert('Failed to add ad.');
+                }
+            });
+
+            // Handle Edit Ad form submission
+            editAdForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const adId = document.getElementById('editAdId').value;
+                const pageId = document.getElementById('editAdPageId').value; // Ensure page_id is retained
+                const adName = document.getElementById('editAdName').value;
+                const adLink = document.getElementById('editAdLink').value;
+                const addedDate = document.getElementById('editAdAddedDate').value;
+
+                const updatedAd = {
+                    ad_id: adId,
+                    page_id: pageId,
+                    ad_name: adName,
+                    ad_link: adLink,
+                    added_date: addedDate
+                };
+
+                closeModal('editAdModal');
+                showLoading();
+                const res = await fetchData('ads', 'PUT', updatedAd, adId);
+                if (res.status === 'success') {
+                    alert('Ad updated successfully!');
+                    // Re-render ads for the current page
+                    const currentPage = allPages.find(p => p.page_id === currentFacebookPageId);
+                    await renderAdsForPage(currentFacebookPageId, currentPage?.page_name || 'Unknown Page');
+                } else {
+                    hideLoading();
+                    alert('Failed to update ad.');
+                }
+            });
+
+            // --- Sidebar Navigation Handler ---
+            sidebarNav.addEventListener('click', (event) => {
+                const targetLi = event.target.closest('li');
+                if (targetLi) {
+                    // Remove 'active' class from all navigation items
+                    sidebarNav.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+                    // Add 'active' class to the clicked item
+                    targetLi.classList.add('active');
+
+                    const page = targetLi.dataset.page;
+                    if (page === 'dashboard') {
+                        renderDashboard();
+                        currentFacebookPageId = null; // Reset context when navigating to dashboard
+                    } else if (page === 'facebook-pages') {
+                        renderFacebookPages();
+                        currentFacebookPageId = null; // Reset context when navigating to pages list
+                    }
+                }
+            });
+
+            // Initial load: Render the Dashboard when the page loads
+            renderDashboard();
+        });
     </script>
 </body>
 </html>
