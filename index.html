@@ -3,1320 +3,611 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Ad Monitor</title>
-    <!-- Google Fonts: Poppins and Roboto -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Favicon as SVG for Facebook icon -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232196f3'%3E%3Cpath d='M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15h-3V12h3V9c0-3.31 2.69-6 6-6s6 2.69 6 6v3h-3v3h3v6.8c4.56-.93 8-4.96 8-9.8z'/%3E%3C/svg%3E" type="image/svg+xml">
+    <title>TechGadget - Premium Wireless Earbuds</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Variables for consistent styling */
         :root {
-            --primary-color: #2196f3; /* Blue */
-            --secondary-color: #009688; /* Teal */
-            --background-light: #f8f9fa;
-            --card-background: #ffffff;
-            --text-color: #333;
-            --light-text-color: #666;
-            --border-color: #e0e0e0;
-            --hover-color: #f0f0f0;
-            --danger-color: #f44336;
-            --success-color: #4CAF50;
-            --warning-color: #ff9800;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #f8fafc;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --background: #ffffff;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.25rem;
+            --radius: 0.5rem;
+            --radius-lg: 0.75rem;
         }
 
-        /* Universal Box-sizing and reset margins/paddings */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Body styling */
         body {
-            font-family: 'Poppins', 'Roboto', sans-serif;
-            background-color: var(--background-light);
-            color: var(--text-color);
-            line-height: 1.6;
-            display: flex;
-            min-height: 100vh; /* Full viewport height */
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background-color: var(--background);
+            line-height: 1.5;
         }
 
-        /* Main container for sidebar and content */
         .container {
-            display: flex;
             width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
 
-        /* Sidebar Styling */
-        .sidebar {
-            width: 250px;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0; /* Prevent sidebar from shrinking */
+        /* Header Styles */
+        header {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+            background-color: var(--background);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: var(--shadow-sm);
         }
 
-        /* Logo in sidebar */
-        .sidebar .logo {
-            font-size: 1.8em;
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .sidebar .logo i {
-            margin-right: 10px;
-        }
-
-        /* Navigation list in sidebar */
-        .navigation ul {
-            list-style: none;
-        }
-
-        .navigation ul li {
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            display: flex;
-            align-items: center;
-        }
-
-        .navigation ul li:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
-        }
-
-        .navigation ul li.active {
-            background-color: rgba(255, 255, 255, 0.3);
-            font-weight: 600;
-        }
-
-        .navigation ul li i {
-            margin-right: 15px;
-            font-size: 1.2em;
-        }
-
-        /* Main content area */
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Topbar styling */
-        .topbar {
-            background-color: var(--card-background);
-            padding: 20px 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky; /* Sticky header */
-            top: 0;
-            z-index: 1000;
         }
 
-        .topbar h1 {
-            font-size: 1.8em;
-            color: var(--text-color);
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
         }
 
-        /* Notification icon styling */
-        .notification-icon {
-            position: relative;
-            cursor: pointer;
-            font-size: 1.5em;
-            color: var(--light-text-color);
-            padding: 5px;
-            border-radius: 50%;
-            transition: background-color 0.3s ease;
+        /* Landing Page Styles */
+        .hero {
+            padding: 4rem 0;
+            background-color: var(--secondary);
         }
 
-        .notification-icon:hover {
-            background-color: var(--hover-color);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: var(--danger-color);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.7em;
-            animation: pulse 1.5s infinite; /* Pulsing animation for notifications */
-        }
-
-        .notification-badge.hidden {
-            display: none;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* Content area padding */
-        .content-area {
-            padding: 30px;
-            flex-grow: 1;
-        }
-
-        /* Dashboard Stat Cards layout */
-        .stat-cards {
+        .product-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            grid-template-columns: 1fr;
+            gap: 3rem;
         }
 
-        /* Individual stat card styling */
-        .stat-card {
-            background-color: var(--card-background);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        @media (min-width: 768px) {
+            .product-container {
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+            }
+        }
+
+        .product-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            margin: 0 auto;
+            display: block;
+        }
+
+        .product-info {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            transition: transform 0.3s ease;
+            gap: 1.5rem;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-card .icon {
-            font-size: 2.5em;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .stat-card .value {
-            font-size: 2.5em;
+        .product-title {
+            font-size: 2.5rem;
             font-weight: 700;
-            color: var(--text-color);
-            margin-bottom: 5px;
+            line-height: 1.2;
         }
 
-        .stat-card .label {
-            font-size: 1.1em;
-            color: var(--light-text-color);
+        .product-price {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .product-description {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        /* Checkout Page Styles */
+        .checkout-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            background-color: var(--background);
+        }
+
+        .checkout-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
             font-weight: 500;
         }
 
-        /* Table container styling */
-        .data-table-container {
-            background-color: var(--card-background);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        /* Table styling */
-        .data-table {
+        .form-control {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: border-color 0.3s;
         }
 
-        .data-table th, .data-table td {
-            text-align: left;
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .data-table th {
-            background-color: var(--hover-color);
-            color: var(--text-color);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.9em;
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
-        .data-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .data-table tbody tr:hover {
-            background-color: var(--hover-color);
-        }
-
-        .data-table .action-buttons button {
-            margin-right: 8px;
-        }
-
-        /* Button base styles */
-        .button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            display: inline-flex;
+        .radio-option {
+            display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
         }
 
-        .button i {
-            font-size: 1.1em;
+        .radio-input {
+            width: 1rem;
+            height: 1rem;
         }
 
-        /* Specific button colors */
-        .primary-button {
-            background-color: var(--primary-color);
-            color: white;
+        .price-summary {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: var(--secondary);
+            border-radius: var(--radius);
         }
 
-        .primary-button:hover {
-            background-color: #1976d2; /* Darker blue */
-            transform: translateY(-2px);
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
         }
 
-        .secondary-button {
-            background-color: var(--secondary-color);
-            color: white;
+        .price-total {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
         }
 
-        .secondary-button:hover {
-            background-color: #00796b; /* Darker teal */
-            transform: translateY(-2px);
+        /* Success Message */
+        .success-message {
+            text-align: center;
+            padding: 4rem 0;
         }
 
-        .delete-button {
-            background-color: var(--danger-color);
-            color: white;
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
         }
 
-        .delete-button:hover {
-            background-color: #d32f2f; /* Darker red */
-            transform: translateY(-2px);
+        .success-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
         }
 
-        .edit-button {
-            background-color: #FFC107; /* Amber */
-            color: #333;
+        .success-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 500px;
+            margin: 0 auto 2rem;
         }
 
-        .edit-button:hover {
-            background-color: #FFA000;
-            transform: translateY(-2px);
+        /* Loading State */
+        .loading {
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
         }
 
-        .view-ads-button {
-            background-color: #9E9E9E; /* Grey */
-            color: white;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .view-ads-button:hover {
-            background-color: #757575;
-            transform: translateY(-2px);
+        /* Footer */
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
         }
 
-        /* Modal overlay */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 2000; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
-            display: flex; /* Use flexbox for centering */
-            align-items: center;
-            justify-content: center;
+        /* Utility Classes */
+        .hidden {
+            display: none;
         }
 
-        /* Modal content box */
-        .modal-content {
-            background-color: var(--card-background);
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 550px; /* Max width for modals */
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-            animation: fadeIn 0.3s ease-out; /* Fade-in animation */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-content h2 {
-            margin-bottom: 25px;
-            color: var(--primary-color);
-            font-size: 1.8em;
+        .text-center {
             text-align: center;
         }
 
-        /* Close button for modals */
-        .close-button {
-            color: var(--light-text-color);
-            font-size: 2em;
-            position: absolute;
-            top: 15px;
-            right: 25px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close-button:hover {
-            color: var(--text-color);
-        }
-
-        /* Form group styling within modals */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--light-text-color);
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="url"],
-        .form-group input[type="date"],
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1em;
-            font-family: 'Poppins', sans-serif;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
-        }
-
-        .modal .button {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.1em;
-            margin-top: 10px;
-        }
-
-        /* Notification list within the modal */
-        .notification-list {
-            max-height: 300px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px;
-        }
-
-        .notification-item {
-            background-color: var(--hover-color);
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            font-size: 0.95em;
-        }
-
-        .notification-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .notification-item strong {
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-
-        .notification-item .ad-name {
-            font-weight: 600;
-            color: var(--text-color);
-        }
-
-        .notification-item .page-name {
-            font-size: 0.85em;
-            color: var(--light-text-color);
-        }
-
-        .notification-item .details {
-            margin-top: 5px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8em;
-            color: var(--light-text-color);
-        }
-
-        /* Notification item type specific colors */
-        .notification-item.type-7-days { background-color: rgba(255, 152, 0, 0.1); } /* Orange light */
-        .notification-item.type-10-days { background-color: rgba(255, 87, 34, 0.1); } /* Deep Orange light */
-        .notification-item.type-15-days { background-color: rgba(244, 67, 54, 0.1); } /* Red light */
-        .notification-item.type-30-days { background-color: rgba(183, 28, 28, 0.1); } /* Dark Red light */
-        .notification-item.type-deleted { background-color: rgba(96, 125, 139, 0.1); } /* Blue Grey light */
-
-        .notification-item .action-type {
-            font-weight: 600;
-        }
-
-        .notification-item .action-type.type-7-days { color: var(--warning-color); }
-        .notification-item .action-type.type-10-days { color: #FF5722; } /* Deep Orange */
-        .notification-item .action-type.type-15-days { color: var(--danger-color); }
-        .notification-item .action-type.type-30-days { color: #B71C1C; } /* Dark Red */
-        .notification-item .action-type.type-deleted { color: #607D8B; } /* Blue Grey */
-
-
-        /* Utility Classes */
-        .text-center { text-align: center; }
-        .hidden { display: none !important; }
-
-        /* Responsive Design for smaller screens */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 10px 0;
-            }
-
-            .sidebar .logo {
-                display: none; /* Hide logo on small screens */
-            }
-
-            .navigation ul {
-                display: flex;
-                justify-content: space-around;
-                width: 100%;
-            }
-
-            .navigation ul li {
-                padding: 10px 15px;
-                margin-bottom: 0;
-                text-align: center;
-                flex-direction: column;
-                font-size: 0.8em;
-            }
-
-            .navigation ul li i {
-                margin-right: 0;
-                margin-bottom: 5px;
-            }
-
-            .container {
-                flex-direction: column;
-            }
-
-            .topbar {
-                padding: 15px 20px;
-            }
-
-            .topbar h1 {
-                font-size: 1.5em;
-            }
-
-            .content-area {
-                padding: 20px;
-            }
-
-            .stat-cards {
-                grid-template-columns: 1fr; /* Single column on small screens */
-            }
-
-            .data-table th, .data-table td {
-                padding: 10px 15px;
-                font-size: 0.9em;
-            }
-
-            .button {
-                padding: 10px 15px;
-                font-size: 0.9em;
-            }
-        }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-8 { margin-bottom: 2rem; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="logo">
-                <i class="fab fa-facebook-f"></i> Ad Monitor
+    <!-- Landing Page -->
+    <div id="landing-page">
+        <header>
+            <div class="container header-container">
+                <a href="#" class="logo">TechGadget</a>
             </div>
-            <nav class="navigation">
-                <ul>
-                    <li class="active" data-page="dashboard">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </li>
-                    <li data-page="facebook-pages">
-                        <i class="fab fa-facebook-square"></i> Facebook Pages
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+        </header>
 
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Topbar with Title and Notification Icon -->
-            <header class="topbar">
-                <h1 id="page-title">Dashboard</h1>
-                <div class="notification-icon" id="notification-icon">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge hidden"></span>
+        <section class="hero">
+            <div class="container">
+                <div class="product-container">
+                    <img id="product-image" src="https://via.placeholder.com/500x500" alt="Product Image" class="product-image">
+                    <div class="product-info">
+                        <h1 id="product-title" class="product-title">Premium Wireless Earbuds</h1>
+                        <p id="product-price" class="product-price">৳2,500</p>
+                        <p id="product-description" class="product-description">
+                            Experience crystal-clear sound with our premium wireless earbuds. 
+                            Featuring noise cancellation, 24-hour battery life, and comfortable fit.
+                        </p>
+                        <a href="#checkout" id="order-now-btn" class="btn btn-primary">Order Now</a>
+                    </div>
                 </div>
-            </header>
-
-            <!-- Dynamic Content Area -->
-            <div class="content-area" id="content-area">
-                <!-- Content will be loaded dynamically here by JavaScript -->
             </div>
-        </main>
-    </div>
+        </section>
 
-    <!-- Modals for Add Page, Add Ad, Edit Ad, and Notifications -->
-
-    <!-- Add New Facebook Page Modal -->
-    <div id="addPageModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Add New Facebook Page</h2>
-            <form id="addPageForm">
-                <div class="form-group">
-                    <label for="pageName">Page Name:</label>
-                    <input type="text" id="pageName" required>
-                </div>
-                <div class="form-group">
-                    <label for="websiteLink">Website Link (Optional):</label>
-                    <input type="url" id="websiteLink">
-                </div>
-                <div class="form-group">
-                    <label for="pageAddedDate">Added Date:</label>
-                    <input type="date" id="pageAddedDate" required>
-                </div>
-                <button type="submit" class="button primary-button"><i class="fas fa-plus-circle"></i> Add Page</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Add New Ad Modal -->
-    <div id="addAdModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Add New Ad</h2>
-            <form id="addAdForm">
-                <div class="form-group">
-                    <label for="adPageSelect">Facebook Page:</label>
-                    <select id="adPageSelect" required></select>
-                </div>
-                <div class="form-group">
-                    <label for="adName">Ad Name / Description:</label>
-                    <input type="text" id="adName" required>
-                </div>
-                <div class="form-group">
-                    <label for="adLink">Ad Link (Meta Ad Library):</label>
-                    <input type="url" id="adLink" required>
-                </div>
-                <div class="form-group">
-                    <label for="adAddedDate">Added Date:</label>
-                    <input type="date" id="adAddedDate" required>
-                </div>
-                <button type="submit" class="button primary-button"><i class="fas fa-plus-circle"></i> Add Ad</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Edit Ad Modal -->
-    <div id="editAdModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Edit Ad</h2>
-            <form id="editAdForm">
-                <input type="hidden" id="editAdId">
-                <input type="hidden" id="editAdPageId">
-                <div class="form-group">
-                    <label for="editAdName">Ad Name / Description:</label>
-                    <input type="text" id="editAdName" required>
-                </div>
-                <div class="form-group">
-                    <label for="editAdLink">Ad Link (Meta Ad Library):</label>
-                    <input type="url" id="editAdLink" required>
-                </div>
-                <div class="form-group">
-                    <label for="editAdAddedDate">Added Date:</label>
-                    <input type="date" id="editAdAddedDate" required>
-                </div>
-                <button type="submit" class="button primary-button"><i class="fas fa-save"></i> Save Changes</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Notification List Modal -->
-    <div id="notificationModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Notifications</h2>
-            <div id="notificationList" class="notification-list">
-                <!-- Notifications will be dynamically added here -->
+        <footer>
+            <div class="container">
+                <p>© 2023 TechGadget. All rights reserved.</p>
             </div>
-            <button class="button secondary-button" id="clearNotificationsBtn">Clear All</button>
+        </footer>
+    </div>
+
+    <!-- Checkout Page -->
+    <div id="checkout-page" class="hidden">
+        <header>
+            <div class="container header-container">
+                <a href="#" class="logo">TechGadget</a>
+                <a href="#" id="back-to-product" class="btn">Back to Product</a>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="checkout-container">
+                <h1 class="checkout-title">Complete Your Order</h1>
+                <form id="checkout-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="form-label">Full Address</label>
+                        <textarea id="address" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Delivery Location</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="location" value="Inside Dhaka" class="radio-input" checked>
+                                Inside Dhaka
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="location" value="Outside Dhaka" class="radio-input">
+                                Outside Dhaka
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="price-summary">
+                        <div class="price-row">
+                            <span>Product Price:</span>
+                            <span id="product-price-summary">৳2,500</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Delivery Charge:</span>
+                            <span id="delivery-charge">৳70</span>
+                        </div>
+                        <div class="price-row price-total">
+                            <span>Total:</span>
+                            <span id="total-price">৳2,570</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block mt-4" id="submit-btn">
+                        Place Order
+                    </button>
+                </form>
+            </div>
         </div>
+
+        <footer>
+            <div class="container">
+                <p>© 2023 TechGadget. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Success Page -->
+    <div id="success-page" class="hidden">
+        <header>
+            <div class="container header-container">
+                <a href="#" class="logo">TechGadget</a>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="success-message">
+                <div class="success-icon">✓</div>
+                <h1 class="success-title">Order Placed Successfully!</h1>
+                <p class="success-text">
+                    Thank you for your purchase. Your order has been received and will be processed shortly. 
+                    We'll contact you soon with delivery details.
+                </p>
+                <a href="#" id="back-to-home" class="btn btn-primary">Back to Home</a>
+            </div>
+        </div>
+
+        <footer>
+            <div class="container">
+                <p>© 2023 TechGadget. All rights reserved.</p>
+            </div>
+        </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // IMPORTANT: https://script.google.com/macros/s/AKfycby7eagwVvd5BT15wy8PXsbT9uxTyvysKVS6SZqQU5lm0GeLx68pb8tF9uyxu90aEEeU/exec
-            // এই URL টি আপনার Google Apps Script Deployment থেকে পাওয়া যাবে।
-            // যদি আপনি এটি পরিবর্তন না করেন, তাহলে অ্যাপটি কাজ করবে না।
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7eagwVvd5BT15wy8PXsbT9uxTyvysKVS6SZqQU5lm0GeLx68pb8tF9uyxu90aEEeU/exec'; 
+        // Global product data
+        let productData = {
+            title: "Premium Wireless Earbuds",
+            price: 2500,
+            image: "https://via.placeholder.com/500x500",
+            description: "Experience crystal-clear sound with our premium wireless earbuds. Featuring noise cancellation, 24-hour battery life, and comfortable fit."
+        };
 
-            // DOM Elements
-            const contentArea = document.getElementById('content-area');
-            const pageTitle = document.getElementById('page-title');
-            const notificationIcon = document.getElementById('notification-icon');
-            const notificationBadge = notificationIcon.querySelector('.notification-badge');
-            const sidebarNav = document.querySelector('.navigation ul');
-
-            // Modal Elements
-            const addPageModal = document.getElementById('addPageModal');
-            const addPageForm = document.getElementById('addPageForm');
-            const addAdModal = document.getElementById('addAdModal');
-            const addAdForm = document.getElementById('addAdForm');
-            const editAdModal = document.getElementById('editAdModal');
-            const editAdForm = document.getElementById('editAdForm');
-            const notificationModal = document.getElementById('notificationModal');
-            const notificationList = document.getElementById('notificationList');
-            const clearNotificationsBtn = document.getElementById('clearNotificationsBtn');
-
-            // Global data storage
-            let allPages = [];
-            let allAds = [];
-            let notifications = []; // To store notifications
-            let currentFacebookPageId = null; // To keep track of the current page being viewed for ads
-
-            // Helper function to open any modal
-            function openModal(modalId) {
-                document.getElementById(modalId).style.display = 'flex';
+        // Check current page and initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL for success parameter
+            if (window.location.hash === '#success') {
+                showSuccessPage();
+                return;
+            }
+            
+            // Check if we're on checkout page
+            if (window.location.hash === '#checkout') {
+                initCheckoutPage();
+            } else {
+                initLandingPage();
             }
 
-            // Helper function to close any modal
-            function closeModal(modalId) {
-                document.getElementById(modalId).style.display = 'none';
-            }
-
-            // Attach close button functionality to all modals
-            document.querySelectorAll('.modal .close-button').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    closeModal(event.target.closest('.modal').id);
-                });
+            // Set up event listeners for navigation
+            document.getElementById('order-now-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                showCheckoutPage();
+            });
+            
+            document.getElementById('back-to-product').addEventListener('click', function(e) {
+                e.preventDefault();
+                showLandingPage();
+            });
+            
+            document.getElementById('back-to-home').addEventListener('click', function(e) {
+                e.preventDefault();
+                showLandingPage();
             });
 
-            // Close modal if clicked outside the modal content
-            window.addEventListener('click', (event) => {
-                if (event.target.classList.contains('modal')) {
-                    closeModal(event.target.id);
-                }
-            });
-
-            // --- API Calls to Google Apps Script Backend ---
-            async function fetchData(path, method = 'GET', data = null, id = null, queryParams = {}) {
-                // Check if SCRIPT_URL is still the placeholder
-                if (SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                    console.error("Error: SCRIPT_URL has not been updated. Please replace 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' with your actual Google Apps Script Web App URL.");
-                    alert("Configuration Error: Please update the 'SCRIPT_URL' in the code with your Google Apps Script Web App URL.");
-                    return { status: 'error', message: 'Configuration Error: SCRIPT_URL not set.' };
-                }
-
-                let url = `${SCRIPT_URL}?path=${path}`;
-                if (id) url += `&id=${id}`; // Add ID for specific resource operations (PUT, DELETE)
-                // Add any additional query parameters
-                for (const key in queryParams) {
-                    url += `&${key}=${queryParams[key]}`;
-                }
-
-                const options = {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                };
-                // Attach data for POST/PUT requests
-                if (data && (method === 'POST' || method === 'PUT')) {
-                    options.body = JSON.stringify(data);
-                }
-
-                try {
-                    const response = await fetch(url, options);
-                    if (!response.ok) {
-                        // Attempt to parse error message from response body
-                        const errorData = await response.json();
-                        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-                    }
-                    return await response.json(); // Return JSON response
-                } catch (error) {
-                    console.error(`Error fetching ${path}:`, error);
-                    alert(`Failed to perform action: ${error.message}`); // User-friendly alert
-                    return { status: 'error', message: error.message };
-                }
-            }
-
-            // --- Data Loading & Caching ---
-            async function loadAllData() {
-                showLoading(); // Show loading indicator
-                const pagesRes = await fetchData('pages'); // Fetch all pages
-                const adsRes = await fetchData('ads');     // Fetch all ads
-                hideLoading(); // Hide loading indicator
-
-                if (pagesRes.status === 'success') {
-                    allPages = pagesRes.data;
-                } else {
-                    allPages = [];
-                    console.error('Failed to load pages:', pagesRes.message);
-                }
-
-                if (adsRes.status === 'success') {
-                    allAds = adsRes.data;
-                } else {
-                    allAds = [];
-                    console.error('Failed to load ads:', adsRes.message);
-                }
-                checkNotifications(); // After loading, check for new notifications
-            }
-
-            // --- Notification System ---
-            function checkNotifications() {
-                const newNotifications = [];
-                const today = new Date();
-                const existingAdIds = new Set(allAds.map(ad => ad.ad_id));
-
-                // Check for deleted ads by comparing with previously stored ads
-                const previousAds = JSON.parse(localStorage.getItem('previousAdsData') || '[]');
-                const previousAdIds = new Set(previousAds.map(ad => ad.ad_id));
-
-                previousAds.forEach(prevAd => {
-                    if (!existingAdIds.has(prevAd.ad_id)) {
-                        newNotifications.push({
-                            adName: prevAd.ad_name,
-                            pageName: allPages.find(p => p.page_id === prevAd.page_id)?.page_name || 'Unknown Page',
-                            actionType: 'deleted',
-                            date: new Date().toLocaleDateString(),
-                            timestamp: Date.now()
-                        });
-                    }
-                });
-
-                // Store current ads for the next comparison
-                localStorage.setItem('previousAdsData', JSON.stringify(allAds));
-
-                // Check for ads running for specific durations
-                allAds.forEach(ad => {
-                    const addedDate = new Date(ad.added_date);
-                    const diffTime = Math.abs(today - addedDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Calculate days difference
-
-                    let notificationType = '';
-                    if (diffDays >= 7 && diffDays < 10) {
-                        notificationType = '7+ Days';
-                    } else if (diffDays >= 10 && diffDays < 15) {
-                        notificationType = '10+ Days';
-                    } else if (diffDays >= 15 && diffDays < 30) {
-                        notificationType = '15+ Days';
-                    } else if (diffDays >= 30) {
-                        notificationType = '30+ Days';
-                    }
-
-                    if (notificationType) {
-                        newNotifications.push({
-                            adName: ad.ad_name,
-                            pageName: allPages.find(p => p.page_id === ad.page_id)?.page_name || 'Unknown Page',
-                            actionType: notificationType,
-                            date: new Date().toLocaleDateString(),
-                            timestamp: Date.now()
-                        });
-                    }
-                });
-
-                // Filter out duplicate notifications and combine with existing ones
-                const existingNotifications = JSON.parse(localStorage.getItem('adNotifications') || '[]');
-                const combinedNotifications = [...existingNotifications];
-
-                newNotifications.forEach(newNotif => {
-                    const isDuplicate = combinedNotifications.some(existingNotif =>
-                        existingNotif.adName === newNotif.adName &&
-                        existingNotif.pageName === newNotif.pageName &&
-                        existingNotif.actionType === newNotif.actionType &&
-                        existingNotif.date === newNotif.date // Check for same day to avoid re-notifying for same event
-                    );
-                    if (!isDuplicate) {
-                        combinedNotifications.push(newNotif);
-                    }
-                });
-
-                // Sort notifications by timestamp (newest first)
-                combinedNotifications.sort((a, b) => b.timestamp - a.timestamp);
-
-                notifications = combinedNotifications;
-                localStorage.setItem('adNotifications', JSON.stringify(notifications)); // Save to local storage
-                updateNotificationBadge(); // Update the UI badge
-            }
-
-            // Update the notification badge count and visibility
-            function updateNotificationBadge() {
-                if (notifications.length > 0) {
-                    notificationBadge.textContent = notifications.length;
-                    notificationBadge.classList.remove('hidden');
-                } else {
-                    notificationBadge.classList.add('hidden');
-                }
-            }
-
-            // Render notifications in the modal
-            function renderNotifications() {
-                notificationList.innerHTML = ''; // Clear previous notifications
-                if (notifications.length === 0) {
-                    notificationList.innerHTML = '<p class="text-center">No new notifications.</p>';
-                    return;
-                }
-
-                notifications.forEach(notif => {
-                    const item = document.createElement('div');
-                    let typeClass = '';
-                    // Assign CSS class based on notification type for styling
-                    if (notif.actionType === 'deleted') typeClass = 'type-deleted';
-                    else if (notif.actionType === '7+ Days') typeClass = 'type-7-days';
-                    else if (notif.actionType === '10+ Days') typeClass = 'type-10-days';
-                    else if (notif.actionType === '15+ Days') typeClass = 'type-15-days';
-                    else if (notif.actionType === '30+ Days') typeClass = 'type-30-days';
-
-                    item.className = `notification-item ${typeClass}`;
-                    item.innerHTML = `
-                        <span class="ad-name">${notif.adName}</span>
-                        <span class="page-name">Page: ${notif.pageName}</span>
-                        <div class="details">
-                            <span class="action-type ${typeClass}">Action: ${notif.actionType}</span>
-                            <span class="date">Date: ${notif.date}</span>
-                        </div>
-                    `;
-                    notificationList.appendChild(item);
-                });
-            }
-
-            // Event listener for notification icon click
-            notificationIcon.addEventListener('click', () => {
-                renderNotifications();
-                openModal('notificationModal');
-            });
-
-            // Event listener for clearing all notifications
-            clearNotificationsBtn.addEventListener('click', () => {
-                notifications = [];
-                localStorage.removeItem('adNotifications'); // Clear from local storage
-                updateNotificationBadge();
-                renderNotifications();
-            });
-
-            // --- Page Rendering Functions ---
-            // Show a simple loading spinner
-            function showLoading() {
-                contentArea.innerHTML = '<div class="text-center" style="padding: 50px;"><i class="fas fa-spinner fa-spin" style="font-size: 3em; color: var(--primary-color);"></i><p style="margin-top: 20px;">Loading data...</p></div>';
-            }
-
-            // Hide loading (by replacing content, or a more sophisticated method could be used)
-            function hideLoading() {
-                // In this simple app, content replacement handles hiding.
-                // For more complex apps, you might have a dedicated loading overlay.
-            }
-
-            // Render the Dashboard page
-            async function renderDashboard() {
-                pageTitle.textContent = 'Dashboard';
-                await loadAllData(); // Load latest data for stats
-
-                const totalPages = allPages.length;
-                const totalAds = allAds.length;
-
-                const today = new Date();
-                // Calculate ads running more than 7 days
-                const adsRunningMoreThan7Days = allAds.filter(ad => {
-                    const addedDate = new Date(ad.added_date);
-                    const diffTime = Math.abs(today - addedDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    return diffDays > 7;
-                }).length;
-
-                contentArea.innerHTML = `
-                    <div class="stat-cards">
-                        <div class="stat-card">
-                            <div class="icon"><i class="fas fa-file-alt"></i></div>
-                            <div class="value">${totalPages}</div>
-                            <div class="label">Total Facebook Pages</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="icon"><i class="fas fa-bullhorn"></i></div>
-                            <div class="value">${totalAds}</div>
-                            <div class="label">Total Ads Added</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="icon"><i class="fas fa-hourglass-half"></i></div>
-                            <div class="value">${adsRunningMoreThan7Days}</div>
-                            <div class="label">Ads Running More Than 7 Days</div>
-                        </div>
-                    </div>
-                    <!-- Optionally, you can add recent activity tables here -->
-                `;
-            }
-
-            // Render the Facebook Pages list page
-            async function renderFacebookPages() {
-                pageTitle.textContent = 'Facebook Pages';
-                await loadAllData(); // Ensure latest data for pages
-
-                let tableHtml = `
-                    <div class="data-table-container">
-                        <button class="button primary-button" id="addPageButton"><i class="fas fa-plus-circle"></i> Add Page</button>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Page Name</th>
-                                    <th>Website Link</th>
-                                    <th>Added Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-
-                if (allPages.length === 0) {
-                    tableHtml += `
-                        <tr><td colspan="4" class="text-center">No Facebook pages added yet.</td></tr>
-                    `;
-                } else {
-                    allPages.forEach(page => {
-                        const websiteLink = page.website ? `<a href="${page.website}" target="_blank">${page.website}</a>` : 'N/A';
-                        tableHtml += `
-                            <tr>
-                                <td>${page.page_name}</td>
-                                <td>${websiteLink}</td>
-                                <td>${page.added_date}</td>
-                                <td class="action-buttons">
-                                    <button class="button view-ads-button" data-id="${page.page_id}" data-name="${page.page_name}"><i class="fas fa-eye"></i> View Ads</button>
-                                    <button class="button delete-button" data-id="${page.page_id}"><i class="fas fa-trash-alt"></i> Delete</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-
-                tableHtml += `
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-
-                contentArea.innerHTML = tableHtml;
-
-                // Event listener for "Add Page" button
-                document.getElementById('addPageButton').addEventListener('click', () => {
-                    document.getElementById('pageAddedDate').valueAsDate = new Date(); // Set default date to today
-                    openModal('addPageModal');
-                });
-
-                // Event listeners for "View Ads" buttons
-                document.querySelectorAll('.view-ads-button').forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        currentFacebookPageId = event.currentTarget.dataset.id; // Store current page ID
-                        const pageName = event.currentTarget.dataset.name;
-                        renderAdsForPage(currentFacebookPageId, pageName);
-                    });
-                });
-
-                // Event listeners for "Delete Page" buttons
-                document.querySelectorAll('.delete-button').forEach(button => {
-                    button.addEventListener('click', async (event) => {
-                        const pageId = event.currentTarget.dataset.id;
-                        if (confirm('Are you sure you want to delete this page and all its associated ads?')) {
-                            showLoading();
-                            const res = await fetchData('pages', 'DELETE', null, pageId);
-                            if (res.status === 'success') {
-                                // Also delete associated ads from the Ads sheet
-                                const adsToDelete = allAds.filter(ad => ad.page_id === pageId);
-                                for (const ad of adsToDelete) {
-                                    await fetchData('ads', 'DELETE', null, ad.ad_id);
-                                }
-                                await renderFacebookPages(); // Re-render pages to reflect changes
-                                alert('Page and associated ads deleted successfully!');
-                            } else {
-                                hideLoading();
-                                alert('Failed to delete page.');
-                            }
-                        }
-                    });
-                });
-            }
-
-            // Render ads for a specific Facebook page
-            async function renderAdsForPage(pageId, pageName) {
-                pageTitle.textContent = `Ads for ${pageName}`;
-                showLoading();
-                // Fetch ads specifically for the given pageId
-                const res = await fetchData('ads', 'GET', null, null, { page_id: pageId });
-                hideLoading();
-
-                let adsForPage = [];
-                if (res.status === 'success') {
-                    adsForPage = res.data;
-                } else {
-                    console.error('Failed to load ads for page:', res.message);
-                }
-
-                let tableHtml = `
-                    <div class="data-table-container">
-                        <button class="button primary-button" id="addAdButton"><i class="fas fa-plus-circle"></i> Add Ad</button>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Ad Name / Description</th>
-                                    <th>Ad Link</th>
-                                    <th>Added Date</th>
-                                    <th>Running Since</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-
-                if (adsForPage.length === 0) {
-                    tableHtml += `
-                        <tr><td colspan="5" class="text-center">No ads added for this page yet.</td></tr>
-                    `;
-                } else {
-                    adsForPage.forEach(ad => {
-                        const addedDate = new Date(ad.added_date);
-                        const today = new Date();
-                        const diffTime = Math.abs(today - addedDate);
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Calculate days running
-                        const runningSince = `${diffDays} Day${diffDays === 1 ? '' : 's'}`;
-
-                        tableHtml += `
-                            <tr>
-                                <td>${ad.ad_name}</td>
-                                <td><a href="${ad.ad_link}" target="_blank">View Ad</a></td>
-                                <td>${ad.added_date}</td>
-                                <td>${runningSince}</td>
-                                <td class="action-buttons">
-                                    <button class="button edit-button" data-id="${ad.ad_id}"
-                                        data-name="${ad.ad_name}" data-link="${ad.ad_link}"
-                                        data-date="${ad.added_date}" data-page-id="${ad.page_id}">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button class="button delete-button" data-id="${ad.ad_id}"><i class="fas fa-trash-alt"></i> Delete</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-
-                tableHtml += `
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-
-                contentArea.innerHTML = tableHtml;
-
-                // Event listener for "Add Ad" button
-                document.getElementById('addAdButton').addEventListener('click', () => {
-                    // Populate the Facebook Page dropdown in the Add Ad modal
-                    const adPageSelect = document.getElementById('adPageSelect');
-                    adPageSelect.innerHTML = '';
-                    allPages.forEach(page => {
-                        const option = document.createElement('option');
-                        option.value = page.page_id;
-                        option.textContent = page.page_name;
-                        if (page.page_id === currentFacebookPageId) {
-                            option.selected = true; // Pre-select the current page
-                        }
-                        adPageSelect.appendChild(option);
-                    });
-                    document.getElementById('adAddedDate').valueAsDate = new Date(); // Set default date to today
-                    openModal('addAdModal');
-                });
-
-                // Event listeners for "Edit Ad" buttons
-                document.querySelectorAll('.edit-button').forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        // Populate edit modal fields with current ad data
-                        const adId = event.currentTarget.dataset.id;
-                        const adName = event.currentTarget.dataset.name;
-                        const adLink = event.currentTarget.dataset.link;
-                        const adAddedDate = event.currentTarget.dataset.date;
-                        const adPageId = event.currentTarget.dataset.pageId;
-
-                        document.getElementById('editAdId').value = adId;
-                        document.getElementById('editAdPageId').value = adPageId;
-                        document.getElementById('editAdName').value = adName;
-                        document.getElementById('editAdLink').value = adLink;
-                        document.getElementById('editAdAddedDate').value = adAddedDate;
-                        openModal('editAdModal');
-                    });
-                });
-
-                // Event listeners for "Delete Ad" buttons
-                document.querySelectorAll('.delete-button').forEach(button => {
-                    button.addEventListener('click', async (event) => {
-                        const adId = event.currentTarget.dataset.id;
-                        if (confirm('Are you sure you want to delete this ad?')) {
-                            showLoading();
-                            const res = await fetchData('ads', 'DELETE', null, adId);
-                            if (res.status === 'success') {
-                                alert('Ad deleted successfully!');
-                                // Reload ads for the current page after deletion
-                                const currentPage = allPages.find(p => p.page_id === currentFacebookPageId);
-                                await renderAdsForPage(currentFacebookPageId, currentPage?.page_name || 'Unknown Page');
-                            } else {
-                                hideLoading();
-                                alert('Failed to delete ad.');
-                            }
-                        }
-                    });
-                });
-            }
-
-            // --- Form Submission Handlers ---
-
-            // Handle Add Page form submission
-            addPageForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const pageName = document.getElementById('pageName').value;
-                const websiteLink = document.getElementById('websiteLink').value;
-                const addedDate = document.getElementById('pageAddedDate').value;
-
-                const newPage = {
-                    page_name: pageName,
-                    website: websiteLink,
-                    added_date: addedDate
-                };
-
-                closeModal('addPageModal');
-                showLoading();
-                const res = await fetchData('pages', 'POST', newPage);
-                if (res.status === 'success') {
-                    alert('Page added successfully!');
-                    addPageForm.reset(); // Clear form fields
-                    await renderFacebookPages(); // Re-render pages list
-                } else {
-                    hideLoading();
-                    alert('Failed to add page.');
-                }
-            });
-
-            // Handle Add Ad form submission
-            addAdForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const pageId = document.getElementById('adPageSelect').value;
-                const adName = document.getElementById('adName').value;
-                const adLink = document.getElementById('adLink').value;
-                const addedDate = document.getElementById('adAddedDate').value;
-
-                const newAd = {
-                    page_id: pageId,
-                    ad_name: adName,
-                    ad_link: adLink,
-                    added_date: addedDate
-                };
-
-                closeModal('addAdModal');
-                showLoading();
-                const res = await fetchData('ads', 'POST', newAd);
-                if (res.status === 'success') {
-                    alert('Ad added successfully!');
-                    addAdForm.reset(); // Clear form fields
-                    // Re-render ads for the current page
-                    const currentPage = allPages.find(p => p.page_id === currentFacebookPageId);
-                    await renderAdsForPage(currentFacebookPageId, currentPage?.page_name || 'Unknown Page');
-                } else {
-                    hideLoading();
-                    alert('Failed to add ad.');
-                }
-            });
-
-            // Handle Edit Ad form submission
-            editAdForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const adId = document.getElementById('editAdId').value;
-                const pageId = document.getElementById('editAdPageId').value; // Ensure page_id is retained
-                const adName = document.getElementById('editAdName').value;
-                const adLink = document.getElementById('editAdLink').value;
-                const addedDate = document.getElementById('editAdAddedDate').value;
-
-                const updatedAd = {
-                    ad_id: adId,
-                    page_id: pageId,
-                    ad_name: adName,
-                    ad_link: adLink,
-                    added_date: addedDate
-                };
-
-                closeModal('editAdModal');
-                showLoading();
-                const res = await fetchData('ads', 'PUT', updatedAd, adId);
-                if (res.status === 'success') {
-                    alert('Ad updated successfully!');
-                    // Re-render ads for the current page
-                    const currentPage = allPages.find(p => p.page_id === currentFacebookPageId);
-                    await renderAdsForPage(currentFacebookPageId, currentPage?.page_name || 'Unknown Page');
-                } else {
-                    hideLoading();
-                    alert('Failed to update ad.');
-                }
-            });
-
-            // --- Sidebar Navigation Handler ---
-            sidebarNav.addEventListener('click', (event) => {
-                const targetLi = event.target.closest('li');
-                if (targetLi) {
-                    // Remove 'active' class from all navigation items
-                    sidebarNav.querySelectorAll('li').forEach(li => li.classList.remove('active'));
-                    // Add 'active' class to the clicked item
-                    targetLi.classList.add('active');
-
-                    const page = targetLi.dataset.page;
-                    if (page === 'dashboard') {
-                        renderDashboard();
-                        currentFacebookPageId = null; // Reset context when navigating to dashboard
-                    } else if (page === 'facebook-pages') {
-                        renderFacebookPages();
-                        currentFacebookPageId = null; // Reset context when navigating to pages list
-                    }
-                }
-            });
-
-            // Initial load: Render the Dashboard when the page loads
-            renderDashboard();
+            // Load product data from Google Apps Script
+            fetchProductData();
         });
+
+        // Show landing page
+        function showLandingPage() {
+            window.location.hash = '';
+            document.getElementById('landing-page').classList.remove('hidden');
+            document.getElementById('checkout-page').classList.add('hidden');
+            document.getElementById('success-page').classList.add('hidden');
+        }
+
+        // Show checkout page
+        function showCheckoutPage() {
+            window.location.hash = 'checkout';
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('checkout-page').classList.remove('hidden');
+            document.getElementById('success-page').classList.add('hidden');
+            updatePriceSummary();
+        }
+
+        // Show success page
+        function showSuccessPage() {
+            window.location.hash = 'success';
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('checkout-page').classList.add('hidden');
+            document.getElementById('success-page').classList.remove('hidden');
+        }
+
+        // Initialize landing page
+        function initLandingPage() {
+            document.getElementById('landing-page').classList.remove('hidden');
+            updateProductDisplay();
+        }
+
+        // Initialize checkout page
+        function initCheckoutPage() {
+            document.getElementById('checkout-page').classList.remove('hidden');
+            
+            // Update price display
+            updatePriceSummary();
+            
+            // Listen for location changes
+            document.querySelectorAll('input[name="location"]').forEach(radio => {
+                radio.addEventListener('change', updatePriceSummary);
+            });
+            
+            // Handle form submission
+            document.getElementById('checkout-form').addEventListener('submit', handleFormSubmit);
+        }
+
+        // Fetch product data from Google Apps Script
+        function fetchProductData() {
+            // Replace with your Google Apps Script URL
+            const scriptUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?action=getProduct';
+            
+            fetch(scriptUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.title) {
+                        productData = data;
+                        updateProductDisplay();
+                        updatePriceSummary();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching product data:', error);
+                    // Use default product data if fetch fails
+                });
+        }
+
+        // Update product display on landing page
+        function updateProductDisplay() {
+            document.getElementById('product-title').textContent = productData.title;
+            document.getElementById('product-price').textContent = `৳${productData.price.toLocaleString()}`;
+            document.getElementById('product-image').src = productData.image;
+            document.getElementById('product-description').textContent = productData.description;
+        }
+
+        // Update price summary on checkout page
+        function updatePriceSummary() {
+            const productPrice = productData.price;
+            const deliveryLocation = document.querySelector('input[name="location"]:checked').value;
+            const deliveryCharge = deliveryLocation === 'Inside Dhaka' ? 70 : 120;
+            const totalPrice = productPrice + deliveryCharge;
+
+            document.getElementById('product-price-summary').textContent = `৳${productPrice.toLocaleString()}`;
+            document.getElementById('delivery-charge').textContent = `৳${deliveryCharge}`;
+            document.getElementById('total-price').textContent = `৳${totalPrice.toLocaleString()}`;
+        }
+
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span> Processing...';
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                location: document.querySelector('input[name="location"]:checked').value,
+                product: productData.title,
+                productPrice: productData.price,
+                deliveryCharge: document.getElementById('delivery-charge').textContent.replace('৳', ''),
+                totalPrice: document.getElementById('total-price').textContent.replace('৳', ''),
+                timestamp: new Date().toISOString()
+            };
+            
+            // Replace with your Google Apps Script URL
+            const scriptUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+            
+            fetch(scriptUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(formData).toString()
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(() => {
+                // Redirect to success page
+                showSuccessPage();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('There was an error submitting your order. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            });
+        }
     </script>
 </body>
 </html>
