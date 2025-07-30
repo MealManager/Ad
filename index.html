@@ -3,27 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechGadget - Premium Wireless Earbuds</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Facebook Ad Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #f8fafc;
-            --text: #1e293b;
-            --text-light: #64748b;
-            --background: #ffffff;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-            --radius-sm: 0.25rem;
-            --radius: 0.5rem;
-            --radius-lg: 0.75rem;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #f72585;
+            --gray: #6c757d;
+            --white: #ffffff;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -33,106 +29,119 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text);
-            background-color: var(--background);
-            line-height: 1.5;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
         }
 
         .container {
-            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 20px;
         }
 
-        /* Header Styles */
         header {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border);
-            background-color: var(--background);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .logo {
-            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--primary);
-            text-decoration: none;
         }
 
-        /* Landing Page Styles */
-        .hero {
-            padding: 4rem 0;
-            background-color: var(--secondary);
+        .logo i {
+            color: var(--primary);
         }
 
-        .product-container {
+        .notification-badge {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge i {
+            font-size: 24px;
+            color: var(--gray);
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        @media (min-width: 768px) {
-            .product-container {
-                grid-template-columns: 1fr 1fr;
-                align-items: center;
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        .product-image {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            margin: 0 auto;
-            display: block;
+        .card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            transition: var(--transition);
         }
 
-        .product-info {
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
         }
 
-        .product-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-
-        .product-price {
-            font-size: 2rem;
+        .card-title {
+            font-size: 18px;
             font-weight: 600;
-            color: var(--primary);
-        }
-
-        .product-description {
-            color: var(--text-light);
-            font-size: 1.1rem;
+            color: var(--dark);
         }
 
         .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            text-align: center;
-            text-decoration: none;
-            border-radius: var(--radius);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border: none;
+            gap: 8px;
         }
 
         .btn-primary {
@@ -141,473 +150,940 @@
         }
 
         .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
+            background-color: var(--secondary);
         }
 
-        .btn-block {
-            display: block;
-            width: 100%;
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
         }
 
-        /* Checkout Page Styles */
-        .checkout-container {
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            background-color: var(--background);
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
         }
 
-        .checkout-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            text-align: center;
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
         }
 
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 15px;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 5px;
+            font-size: 14px;
             font-weight: 500;
+            color: var(--dark);
         }
 
         .form-control {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: var(--transition);
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
 
-        .radio-group {
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table th {
+            font-weight: 600;
+            color: var(--gray);
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .table tr:hover td {
+            background-color: #f8f9fa;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+        }
+
+        .notification-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 576px) {
+            .notification-panel {
+                width: 100%;
+            }
+        }
+
+        .notification-panel.active {
+            right: 0;
+        }
+
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: 10px;
         }
 
-        .radio-option {
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            color: var(--danger);
+            font-size: 20px;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .close-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .tabs {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
         }
 
-        .radio-input {
-            width: 1rem;
-            height: 1rem;
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
         }
 
-        .price-summary {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background-color: var(--secondary);
-            border-radius: var(--radius);
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
-        .price-row {
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            width: 90%;
+            max-width: 500px;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            align-items: center;
         }
 
-        .price-total {
+        .modal-title {
             font-weight: 600;
-            font-size: 1.25rem;
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid var(--border);
+            font-size: 18px;
         }
 
-        /* Success Message */
-        .success-message {
-            text-align: center;
-            padding: 4rem 0;
+        .modal-body {
+            padding: 20px;
         }
 
-        .success-icon {
-            font-size: 4rem;
-            color: var(--success);
-            margin-bottom: 1.5rem;
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
         }
 
-        .success-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .success-text {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            max-width: 500px;
-            margin: 0 auto 2rem;
-        }
-
-        /* Loading State */
-        .loading {
-            display: inline-block;
-            width: 1.5rem;
-            height: 1.5rem;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
             border-radius: 50%;
-            border-top-color: white;
+            border-top-color: var(--primary);
             animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* Footer */
-        footer {
-            padding: 2rem 0;
-            text-align: center;
-            color: var(--text-light);
-            font-size: 0.875rem;
-            border-top: 1px solid var(--border);
-            margin-top: 4rem;
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--dark);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1100;
         }
 
-        /* Utility Classes */
-        .hidden {
-            display: none;
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
         }
 
-        .text-center {
-            text-align: center;
+        .toast.success {
+            background-color: var(--success);
         }
 
-        .mt-1 { margin-top: 0.25rem; }
-        .mt-2 { margin-top: 0.5rem; }
-        .mt-4 { margin-top: 1rem; }
-        .mt-8 { margin-top: 2rem; }
-        .mb-4 { margin-bottom: 1rem; }
-        .mb-8 { margin-bottom: 2rem; }
+        .toast.error {
+            background-color: var(--danger);
+        }
     </style>
 </head>
 <body>
-    <!-- Landing Page -->
-    <div id="landing-page">
+    <div class="container">
         <header>
-            <div class="container header-container">
-                <a href="#" class="logo">TechGadget</a>
+            <div class="logo">
+                <i class="fab fa-facebook"></i>
+                <span>Facebook Ad Manager</span>
+            </div>
+            <div class="notification-badge" id="notificationToggle">
+                <i class="fas fa-bell"></i>
+                <span class="badge" id="notificationCount">0</span>
             </div>
         </header>
 
-        <section class="hero">
-            <div class="container">
-                <div class="product-container">
-                    <img id="product-image" src="https://via.placeholder.com/500x500" alt="Product Image" class="product-image">
-                    <div class="product-info">
-                        <h1 id="product-title" class="product-title">Premium Wireless Earbuds</h1>
-                        <p id="product-price" class="product-price">৳2,500</p>
-                        <p id="product-description" class="product-description">
-                            Experience crystal-clear sound with our premium wireless earbuds. 
-                            Featuring noise cancellation, 24-hour battery life, and comfortable fit.
-                        </p>
-                        <a href="#checkout" id="order-now-btn" class="btn btn-primary">Order Now</a>
-                    </div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Add Facebook Page</h3>
                 </div>
+                <form id="pageForm">
+                    <div class="form-group">
+                        <label for="pageName" class="form-label">Page Name</label>
+                        <input type="text" id="pageName" class="form-control" placeholder="Enter page name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pageLink" class="form-label">Facebook Page Link</label>
+                        <input type="url" id="pageLink" class="form-control" placeholder="https://facebook.com/yourpage" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="website" class="form-label">Website (Optional)</label>
+                        <input type="url" id="website" class="form-control" placeholder="https://yourwebsite.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="addPageBtn">
+                        <span id="pageBtnText">Add Page</span>
+                        <div class="spinner" id="pageSpinner" style="display: none;"></div>
+                    </button>
+                </form>
             </div>
-        </section>
 
-        <footer>
-            <div class="container">
-                <p>© 2023 TechGadget. All rights reserved.</p>
-            </div>
-        </footer>
-    </div>
-
-    <!-- Checkout Page -->
-    <div id="checkout-page" class="hidden">
-        <header>
-            <div class="container header-container">
-                <a href="#" class="logo">TechGadget</a>
-                <a href="#" id="back-to-product" class="btn">Back to Product</a>
-            </div>
-        </header>
-
-        <div class="container">
-            <div class="checkout-container">
-                <h1 class="checkout-title">Complete Your Order</h1>
-                <form id="checkout-form">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Add New Ad</h3>
+                </div>
+                <form id="adForm">
                     <div class="form-group">
-                        <label for="name" class="form-label">Full Name</label>
-                        <input type="text" id="name" class="form-control" required>
+                        <label for="pageSelect" class="form-label">Select Page</label>
+                        <select id="pageSelect" class="form-control" required>
+                            <option value="">-- Select Page --</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="phone" class="form-label">Phone Number</label>
-                        <input type="tel" id="phone" class="form-control" required>
+                        <label for="adLink" class="form-label">Ad Link</label>
+                        <input type="url" id="adLink" class="form-control" placeholder="https://facebook.com/yourad" required>
                     </div>
-                    <div class="form-group">
-                        <label for="address" class="form-label">Full Address</label>
-                        <textarea id="address" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Delivery Location</label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="location" value="Inside Dhaka" class="radio-input" checked>
-                                Inside Dhaka
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="location" value="Outside Dhaka" class="radio-input">
-                                Outside Dhaka
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="price-summary">
-                        <div class="price-row">
-                            <span>Product Price:</span>
-                            <span id="product-price-summary">৳2,500</span>
-                        </div>
-                        <div class="price-row">
-                            <span>Delivery Charge:</span>
-                            <span id="delivery-charge">৳70</span>
-                        </div>
-                        <div class="price-row price-total">
-                            <span>Total:</span>
-                            <span id="total-price">৳2,570</span>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block mt-4" id="submit-btn">
-                        Place Order
+                    <button type="submit" class="btn btn-primary" id="addAdBtn">
+                        <span id="adBtnText">Add Ad</span>
+                        <div class="spinner" id="adSpinner" style="display: none;"></div>
                     </button>
                 </form>
             </div>
         </div>
 
-        <footer>
-            <div class="container">
-                <p>© 2023 TechGadget. All rights reserved.</p>
+        <div class="card">
+            <div class="tabs">
+                <div class="tab active" data-tab="pages">Pages</div>
+                <div class="tab" data-tab="ads">Ads</div>
             </div>
-        </footer>
-    </div>
 
-    <!-- Success Page -->
-    <div id="success-page" class="hidden">
-        <header>
-            <div class="container header-container">
-                <a href="#" class="logo">TechGadget</a>
+            <div class="tab-content active" id="pagesTab">
+                <table class="table" id="pagesTable">
+                    <thead>
+                        <tr>
+                            <th>Page Name</th>
+                            <th>Facebook Link</th>
+                            <th>Website</th>
+                            <th>Date Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pagesList">
+                        <!-- Pages will be loaded here -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="pagesEmpty" style="display: none;">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>No Pages Added</h3>
+                    <p>Add your first Facebook page to get started</p>
+                </div>
             </div>
-        </header>
 
-        <div class="container">
-            <div class="success-message">
-                <div class="success-icon">✓</div>
-                <h1 class="success-title">Order Placed Successfully!</h1>
-                <p class="success-text">
-                    Thank you for your purchase. Your order has been received and will be processed shortly. 
-                    We'll contact you soon with delivery details.
-                </p>
-                <a href="#" id="back-to-home" class="btn btn-primary">Back to Home</a>
+            <div class="tab-content" id="adsTab">
+                <table class="table" id="adsTable">
+                    <thead>
+                        <tr>
+                            <th>Page Name</th>
+                            <th>Ad Link</th>
+                            <th>Status</th>
+                            <th>Date Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adsList">
+                        <!-- Ads will be loaded here -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="adsEmpty" style="display: none;">
+                    <i class="fas fa-ad"></i>
+                    <h3>No Ads Added</h3>
+                    <p>Add your first ad to monitor its status</p>
+                </div>
             </div>
         </div>
-
-        <footer>
-            <div class="container">
-                <p>© 2023 TechGadget. All rights reserved.</p>
-            </div>
-        </footer>
     </div>
 
-    <script>
-        // Global product data
-        let productData = {
-            title: "Premium Wireless Earbuds",
-            price: 2500,
-            image: "https://via.placeholder.com/500x500",
-            description: "Experience crystal-clear sound with our premium wireless earbuds. Featuring noise cancellation, 24-hour battery life, and comfortable fit."
-        };
+    <!-- Notification Panel -->
+    <div class="overlay" id="overlay"></div>
+    <div class="notification-panel" id="notificationPanel">
+        <button class="close-panel" id="closePanel">
+            <i class="fas fa-times"></i>
+        </button>
+        <h3>Notifications</h3>
+        <div id="notificationsList">
+            <!-- Notifications will be loaded here -->
+        </div>
+        <div class="empty-state" id="notificationsEmpty" style="display: none;">
+            <i class="fas fa-bell-slash"></i>
+            <h3>No Notifications</h3>
+            <p>You'll see notifications here when ads are deleted</p>
+        </div>
+    </div>
 
-        // Check current page and initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check URL for success parameter
-            if (window.location.hash === '#success') {
-                showSuccessPage();
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-header">
+            <h3 class="modal-title">Confirm Delete</h3>
+        </div>
+        <div class="modal-body">
+            <p id="deleteMessage">Are you sure you want to delete this item?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancelDelete">Cancel</button>
+            <button class="btn btn-primary" id="confirmDelete">Delete</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Google Apps Script URL (Replace with your deployed script URL)
+        const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+        
+        // DOM Elements
+        const pageForm = document.getElementById('pageForm');
+        const adForm = document.getElementById('adForm');
+        const pageSelect = document.getElementById('pageSelect');
+        const pagesList = document.getElementById('pagesList');
+        const adsList = document.getElementById('adsList');
+        const notificationsList = document.getElementById('notificationsList');
+        const notificationToggle = document.getElementById('notificationToggle');
+        const notificationPanel = document.getElementById('notificationPanel');
+        const overlay = document.getElementById('overlay');
+        const closePanel = document.getElementById('closePanel');
+        const notificationCount = document.getElementById('notificationCount');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const deleteModal = document.getElementById('deleteModal');
+        const cancelDelete = document.getElementById('cancelDelete');
+        const confirmDelete = document.getElementById('confirmDelete');
+        const deleteMessage = document.getElementById('deleteMessage');
+        const toast = document.getElementById('toast');
+        const pagesEmpty = document.getElementById('pagesEmpty');
+        const adsEmpty = document.getElementById('adsEmpty');
+        const notificationsEmpty = document.getElementById('notificationsEmpty');
+        const addPageBtn = document.getElementById('addPageBtn');
+        const addAdBtn = document.getElementById('addAdBtn');
+        const pageBtnText = document.getElementById('pageBtnText');
+        const adBtnText = document.getElementById('adBtnText');
+        const pageSpinner = document.getElementById('pageSpinner');
+        const adSpinner = document.getElementById('adSpinner');
+
+        // Global variables
+        let currentDeleteId = null;
+        let currentDeleteType = null;
+        let pagesData = [];
+        let adsData = [];
+        let notificationsData = [];
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPages();
+            loadAds();
+            loadNotifications();
+            setupEventListeners();
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Form submissions
+            pageForm.addEventListener('submit', handlePageSubmit);
+            adForm.addEventListener('submit', handleAdSubmit);
+            
+            // Notification panel
+            notificationToggle.addEventListener('click', toggleNotificationPanel);
+            closePanel.addEventListener('click', toggleNotificationPanel);
+            overlay.addEventListener('click', toggleNotificationPanel);
+            
+            // Tabs
+            tabs.forEach(tab => {
+                tab.addEventListener('click', switchTab);
+            });
+            
+            // Delete modal
+            cancelDelete.addEventListener('click', closeDeleteModal);
+            confirmDelete.addEventListener('click', handleDelete);
+        }
+
+        // Toggle notification panel
+        function toggleNotificationPanel() {
+            notificationPanel.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Switch between tabs
+        function switchTab(e) {
+            const tabId = e.target.getAttribute('data-tab');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            e.target.classList.add('active');
+            document.getElementById(`${tabId}Tab`).classList.add('active');
+        }
+
+        // Handle page form submission
+        async function handlePageSubmit(e) {
+            e.preventDefault();
+            
+            const pageName = document.getElementById('pageName').value;
+            const pageLink = document.getElementById('pageLink').value;
+            const website = document.getElementById('website').value || '';
+            const date = new Date().toISOString().split('T')[0];
+            
+            // Show loading state
+            pageBtnText.style.display = 'none';
+            pageSpinner.style.display = 'block';
+            addPageBtn.disabled = true;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'addPage',
+                        pageName,
+                        pageLink,
+                        website,
+                        date
+                    }),
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Page added successfully!', 'success');
+                    document.getElementById('pageForm').reset();
+                    loadPages();
+                    loadPageSelect();
+                } else {
+                    showToast(result.message || 'Error adding page', 'error');
+                }
+            } catch (error) {
+                showToast('Network error. Please try again.', 'error');
+                console.error('Error:', error);
+            } finally {
+                // Hide loading state
+                pageBtnText.style.display = 'block';
+                pageSpinner.style.display = 'none';
+                addPageBtn.disabled = false;
+            }
+        }
+
+        // Handle ad form submission
+        async function handleAdSubmit(e) {
+            e.preventDefault();
+            
+            const pageName = pageSelect.value;
+            const adLink = document.getElementById('adLink').value;
+            const date = new Date().toISOString().split('T')[0];
+            
+            if (!pageName) {
+                showToast('Please select a page', 'error');
                 return;
             }
             
-            // Check if we're on checkout page
-            if (window.location.hash === '#checkout') {
-                initCheckoutPage();
-            } else {
-                initLandingPage();
-            }
-
-            // Set up event listeners for navigation
-            document.getElementById('order-now-btn').addEventListener('click', function(e) {
-                e.preventDefault();
-                showCheckoutPage();
-            });
+            // Show loading state
+            adBtnText.style.display = 'none';
+            adSpinner.style.display = 'block';
+            addAdBtn.disabled = true;
             
-            document.getElementById('back-to-product').addEventListener('click', function(e) {
-                e.preventDefault();
-                showLandingPage();
-            });
-            
-            document.getElementById('back-to-home').addEventListener('click', function(e) {
-                e.preventDefault();
-                showLandingPage();
-            });
-
-            // Load product data from Google Apps Script
-            fetchProductData();
-        });
-
-        // Show landing page
-        function showLandingPage() {
-            window.location.hash = '';
-            document.getElementById('landing-page').classList.remove('hidden');
-            document.getElementById('checkout-page').classList.add('hidden');
-            document.getElementById('success-page').classList.add('hidden');
-        }
-
-        // Show checkout page
-        function showCheckoutPage() {
-            window.location.hash = 'checkout';
-            document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('checkout-page').classList.remove('hidden');
-            document.getElementById('success-page').classList.add('hidden');
-            updatePriceSummary();
-        }
-
-        // Show success page
-        function showSuccessPage() {
-            window.location.hash = 'success';
-            document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('checkout-page').classList.add('hidden');
-            document.getElementById('success-page').classList.remove('hidden');
-        }
-
-        // Initialize landing page
-        function initLandingPage() {
-            document.getElementById('landing-page').classList.remove('hidden');
-            updateProductDisplay();
-        }
-
-        // Initialize checkout page
-        function initCheckoutPage() {
-            document.getElementById('checkout-page').classList.remove('hidden');
-            
-            // Update price display
-            updatePriceSummary();
-            
-            // Listen for location changes
-            document.querySelectorAll('input[name="location"]').forEach(radio => {
-                radio.addEventListener('change', updatePriceSummary);
-            });
-            
-            // Handle form submission
-            document.getElementById('checkout-form').addEventListener('submit', handleFormSubmit);
-        }
-
-        // Fetch product data from Google Apps Script
-        function fetchProductData() {
-            // Replace with your Google Apps Script URL
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPPQ7v3S7LkSD75aYDbWS2_lhlWw-yNmW3Go_3nAoC4lr0jG5yNut7lfT42yRP46Dy/exec';
-            
-            fetch(scriptUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && data.title) {
-                        productData = data;
-                        updateProductDisplay();
-                        updatePriceSummary();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching product data:', error);
-                    // Use default product data if fetch fails
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'addAd',
+                        pageName,
+                        adLink,
+                        date
+                    }),
                 });
-        }
-
-        // Update product display on landing page
-        function updateProductDisplay() {
-            document.getElementById('product-title').textContent = productData.title;
-            document.getElementById('product-price').textContent = `৳${productData.price.toLocaleString()}`;
-            document.getElementById('product-image').src = productData.image;
-            document.getElementById('product-description').textContent = productData.description;
-        }
-
-        // Update price summary on checkout page
-        function updatePriceSummary() {
-            const productPrice = productData.price;
-            const deliveryLocation = document.querySelector('input[name="location"]:checked').value;
-            const deliveryCharge = deliveryLocation === 'Inside Dhaka' ? 70 : 120;
-            const totalPrice = productPrice + deliveryCharge;
-
-            document.getElementById('product-price-summary').textContent = `৳${productPrice.toLocaleString()}`;
-            document.getElementById('delivery-charge').textContent = `৳${deliveryCharge}`;
-            document.getElementById('total-price').textContent = `৳${totalPrice.toLocaleString()}`;
-        }
-
-        // Handle form submission
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submit-btn');
-            const originalBtnText = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="loading"></span> Processing...';
-            
-            const formData = {
-                name: document.getElementById('name').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
-                location: document.querySelector('input[name="location"]:checked').value,
-                product: productData.title,
-                productPrice: productData.price,
-                deliveryCharge: document.getElementById('delivery-charge').textContent.replace('৳', ''),
-                totalPrice: document.getElementById('total-price').textContent.replace('৳', ''),
-                timestamp: new Date().toISOString()
-            };
-            
-            // Replace with your Google Apps Script URL
-            const scriptUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
-            
-            fetch(scriptUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams(formData).toString()
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Ad added successfully!', 'success');
+                    document.getElementById('adForm').reset();
+                    loadAds();
+                } else {
+                    showToast(result.message || 'Error adding ad', 'error');
                 }
-                return response.text();
-            })
-            .then(() => {
-                // Redirect to success page
-                showSuccessPage();
-            })
-            .catch(error => {
+            } catch (error) {
+                showToast('Network error. Please try again.', 'error');
                 console.error('Error:', error);
-                alert('There was an error submitting your order. Please try again.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalBtnText;
+            } finally {
+                // Hide loading state
+                adBtnText.style.display = 'block';
+                adSpinner.style.display = 'none';
+                addAdBtn.disabled = false;
+            }
+        }
+
+        // Load pages from Google Sheets
+        async function loadPages() {
+            try {
+                const response = await fetch(`${API_URL}?action=getPages`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    pagesData = result.data;
+                    renderPages();
+                    loadPageSelect();
+                } else {
+                    showToast('Error loading pages', 'error');
+                }
+            } catch (error) {
+                showToast('Network error loading pages', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // Load ads from Google Sheets
+        async function loadAds() {
+            try {
+                const response = await fetch(`${API_URL}?action=getAds`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    adsData = result.data;
+                    renderAds();
+                } else {
+                    showToast('Error loading ads', 'error');
+                }
+            } catch (error) {
+                showToast('Network error loading ads', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // Load notifications from Google Sheets
+        async function loadNotifications() {
+            try {
+                const response = await fetch(`${API_URL}?action=getNotifications`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    notificationsData = result.data;
+                    renderNotifications();
+                    updateNotificationBadge();
+                } else {
+                    showToast('Error loading notifications', 'error');
+                }
+            } catch (error) {
+                showToast('Network error loading notifications', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // Render pages in the table
+        function renderPages() {
+            if (pagesData.length === 0) {
+                pagesEmpty.style.display = 'block';
+                pagesList.innerHTML = '';
+                return;
+            }
+            
+            pagesEmpty.style.display = 'none';
+            pagesList.innerHTML = '';
+            
+            pagesData.forEach(page => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${page.pageName}</td>
+                    <td><a href="${page.pageLink}" target="_blank">View Page</a></td>
+                    <td>${page.website ? `<a href="${page.website}" target="_blank">View Website</a>` : 'N/A'}</td>
+                    <td>${page.date}</td>
+                    <td>
+                        <button class="btn btn-outline btn-sm delete-btn" data-id="${page.id}" data-type="page">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+                pagesList.appendChild(row);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.closest('button').getAttribute('data-id');
+                    const type = e.target.closest('button').getAttribute('data-type');
+                    showDeleteModal(id, type);
+                });
             });
         }
+
+        // Render ads in the table
+        function renderAds() {
+            if (adsData.length === 0) {
+                adsEmpty.style.display = 'block';
+                adsList.innerHTML = '';
+                return;
+            }
+            
+            adsEmpty.style.display = 'none';
+            adsList.innerHTML = '';
+            
+            adsData.forEach(ad => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${ad.pageName}</td>
+                    <td><a href="${ad.adLink}" target="_blank">View Ad</a></td>
+                    <td><span class="status-badge ${ad.status === 'ACTIVE' ? 'status-active' : 'status-inactive'}">${ad.status}</span></td>
+                    <td>${ad.date}</td>
+                    <td>
+                        <button class="btn btn-outline btn-sm delete-btn" data-id="${ad.id}" data-type="ad">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+                adsList.appendChild(row);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.closest('button').getAttribute('data-id');
+                    const type = e.target.closest('button').getAttribute('data-type');
+                    showDeleteModal(id, type);
+                });
+            });
+        }
+
+        // Render notifications
+        function renderNotifications() {
+            if (notificationsData.length === 0) {
+                notificationsEmpty.style.display = 'block';
+                notificationsList.innerHTML = '';
+                return;
+            }
+            
+            notificationsEmpty.style.display = 'none';
+            notificationsList.innerHTML = '';
+            
+            notificationsData.forEach(notification => {
+                const item = document.createElement('div');
+                item.className = 'notification-item';
+                item.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="notification-content">
+                        <p>${notification.message}</p>
+                        <div class="notification-time">${formatDate(notification.date)}</div>
+                    </div>
+                `;
+                notificationsList.appendChild(item);
+            });
+        }
+
+        // Load pages into the select dropdown
+        function loadPageSelect() {
+            pageSelect.innerHTML = '<option value="">-- Select Page --</option>';
+            
+            if (pagesData.length === 0) return;
+            
+            pagesData.forEach(page => {
+                const option = document.createElement('option');
+                option.value = page.pageName;
+                option.textContent = page.pageName;
+                pageSelect.appendChild(option);
+            });
+        }
+
+        // Update notification badge count
+        function updateNotificationBadge() {
+            const unreadCount = notificationsData.length;
+            notificationCount.textContent = unreadCount;
+            
+            if (unreadCount > 0) {
+                notificationCount.style.display = 'flex';
+            } else {
+                notificationCount.style.display = 'none';
+            }
+        }
+
+        // Show delete confirmation modal
+        function showDeleteModal(id, type) {
+            currentDeleteId = id;
+            currentDeleteType = type;
+            
+            if (type === 'page') {
+                const page = pagesData.find(p => p.id === id);
+                deleteMessage.textContent = `Are you sure you want to delete the page "${page.pageName}"? This will also delete all associated ads.`;
+            } else {
+                const ad = adsData.find(a => a.id === id);
+                deleteMessage.textContent = `Are you sure you want to delete the ad for "${ad.pageName}"?`;
+            }
+            
+            deleteModal.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        // Close delete modal
+        function closeDeleteModal() {
+            deleteModal.classList.remove('active');
+            overlay.classList.remove('active');
+            currentDeleteId = null;
+            currentDeleteType = null;
+        }
+
+        // Handle delete action
+        async function handleDelete() {
+            if (!currentDeleteId || !currentDeleteType) return;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'deleteItem',
+                        id: currentDeleteId,
+                        type: currentDeleteType
+                    }),
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`${currentDeleteType === 'page' ? 'Page' : 'Ad'} deleted successfully`, 'success');
+                    
+                    if (currentDeleteType === 'page') {
+                        loadPages();
+                        loadAds();
+                    } else {
+                        loadAds();
+                    }
+                } else {
+                    showToast(result.message || 'Error deleting item', 'error');
+                }
+            } catch (error) {
+                showToast('Network error. Please try again.', 'error');
+                console.error('Error:', error);
+            } finally {
+                closeDeleteModal();
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = '') {
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Mock data for demonstration (remove in production)
+        function loadMockData() {
+            if (pagesData.length === 0) {
+                pagesData = [
+                    { id: '1', pageName: 'My Business Page', pageLink: 'https://facebook.com/mybusiness', website: 'https://mybusiness.com', date: '2023-10-01' },
+                    { id: '2', pageName: 'Tech News', pageLink: 'https://facebook.com/technews', website: '', date: '2023-10-05' }
+                ];
+            }
+            
+            if (adsData.length === 0) {
+                adsData = [
+                    { id: '1', pageName: 'My Business Page', adLink: 'https://facebook.com/ad1', status: 'ACTIVE', date: '2023-10-02' },
+                    { id: '2', pageName: 'My Business Page', adLink: 'https://facebook.com/ad2', status: 'DELETED', date: '2023-10-03' },
+                    { id: '3', pageName: 'Tech News', adLink: 'https://facebook.com/ad3', status: 'ACTIVE', date: '2023-10-06' }
+                ];
+            }
+            
+            if (notificationsData.length === 0) {
+                notificationsData = [
+                    { id: '1', message: 'Ad was deleted: My Business Page - https://facebook.com/ad2', date: '2023-10-04T14:30:00' }
+                ];
+            }
+            
+            renderPages();
+            renderAds();
+            renderNotifications();
+            loadPageSelect();
+            updateNotificationBadge();
+        }
+
+        // Uncomment for demo (remove in production)
+        // loadMockData();
     </script>
 </body>
 </html>
