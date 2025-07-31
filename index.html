@@ -3,58 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketing Dashboard</title>
+    <title>Ad Monitor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        secondary: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        },
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.3s ease-in-out',
-                        'slide-up': 'slideUp 0.3s ease-out',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                    },
-                }
-            }
-        }
-    </script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <style>
         .glassmorphism {
             background: rgba(255, 255, 255, 0.15);
@@ -66,18 +18,18 @@
             background: rgba(255, 255, 255, 0.2);
             border-left: 3px solid rgba(14, 165, 233, 0.8);
         }
-        .sidebar-item:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.1);
-        }
         .notification-card {
             transition: all 0.3s ease;
         }
-        .notification-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
         .chart-container {
             height: 300px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
         }
     </style>
 </head>
@@ -86,8 +38,10 @@
         <!-- Sidebar -->
         <div class="glassmorphism w-64 flex-shrink-0 hidden md:flex flex-col border-r border-gray-200">
             <div class="p-4 flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold">MD</div>
-                <h1 class="text-xl font-bold text-gray-800">Marketing Dashboard</h1>
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white">
+                    <i class="fas fa-ad text-lg"></i>
+                </div>
+                <h1 class="text-xl font-bold text-gray-800">Ad Monitor</h1>
             </div>
             <nav class="flex-1 px-2 py-4 space-y-1">
                 <a href="#" id="dashboard-link" class="sidebar-item active flex items-center px-4 py-3 text-sm font-medium rounded-md transition">
@@ -108,9 +62,6 @@
                     <span id="notification-badge" class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span>
                 </a>
             </nav>
-            <div class="p-4 border-t border-gray-200">
-                <div class="text-xs text-gray-500">Connected to Google Sheets</div>
-            </div>
         </div>
 
         <!-- Mobile sidebar toggle -->
@@ -125,8 +76,10 @@
             <div class="flex flex-col h-full">
                 <div class="p-4 flex items-center justify-between border-b border-gray-200">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold">MD</div>
-                        <h1 class="text-xl font-bold text-gray-800">Marketing Dashboard</h1>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white">
+                            <i class="fas fa-ad text-lg"></i>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-800">Ad Monitor</h1>
                     </div>
                     <button id="close-mobile-menu" class="p-2 rounded-full hover:bg-gray-100">
                         <i class="fas fa-times"></i>
@@ -167,10 +120,6 @@
                                 <span id="header-notification-badge" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
                             </button>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold">U</div>
-                            <span class="hidden md:inline text-sm font-medium">User</span>
-                        </div>
                     </div>
                 </div>
             </header>
@@ -178,14 +127,14 @@
             <!-- Main content area -->
             <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
                 <!-- Dashboard Section -->
-                <section id="dashboard-section" class="space-y-6">
+                <section id="dashboard-section" class="space-y-6 animate-fade-in">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <!-- Total Pages Card -->
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
+                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-sm font-medium text-gray-500">Total Pages</p>
-                                    <h3 id="total-pages" class="text-3xl font-bold mt-2">--</h3>
+                                    <h3 id="total-pages" class="text-3xl font-bold mt-2">0</h3>
                                 </div>
                                 <div class="p-3 rounded-lg bg-blue-50 text-blue-600">
                                     <i class="fas fa-file-alt text-xl"></i>
@@ -199,11 +148,11 @@
                         </div>
 
                         <!-- Active Ads Card -->
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
+                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-sm font-medium text-gray-500">Active Ads</p>
-                                    <h3 id="active-ads" class="text-3xl font-bold mt-2">--</h3>
+                                    <h3 id="active-ads" class="text-3xl font-bold mt-2">0</h3>
                                 </div>
                                 <div class="p-3 rounded-lg bg-green-50 text-green-600">
                                     <i class="fas fa-check-circle text-xl"></i>
@@ -217,11 +166,11 @@
                         </div>
 
                         <!-- Deleted Ads Card -->
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
+                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-sm font-medium text-gray-500">Deleted Ads</p>
-                                    <h3 id="deleted-ads" class="text-3xl font-bold mt-2">--</h3>
+                                    <h3 id="deleted-ads" class="text-3xl font-bold mt-2">0</h3>
                                 </div>
                                 <div class="p-3 rounded-lg bg-red-50 text-red-600">
                                     <i class="fas fa-trash-alt text-xl"></i>
@@ -237,19 +186,16 @@
 
                     <!-- Chart Section -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
+                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="font-semibold text-gray-800">Ads Distribution</h3>
-                                <div class="flex space-x-2">
-                                    <button class="px-3 py-1 text-xs bg-blue-50 text-blue-600 rounded-full">This Month</button>
-                                </div>
                             </div>
                             <div class="chart-container">
                                 <canvas id="adsChart"></canvas>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
+                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="font-semibold text-gray-800">Recent Notifications</h3>
                                 <button id="refresh-notifications" class="p-2 rounded-full hover:bg-gray-100">
@@ -257,14 +203,9 @@
                                 </button>
                             </div>
                             <div id="recent-notifications" class="space-y-3 max-h-64 overflow-y-auto">
-                                <div class="animate-pulse flex space-x-4">
-                                    <div class="flex-1 space-y-4 py-1">
-                                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-                                        <div class="space-y-2">
-                                            <div class="h-4 bg-gray-200 rounded"></div>
-                                            <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-                                        </div>
-                                    </div>
+                                <div class="text-center py-8 text-gray-500">
+                                    <i class="fas fa-bell-slash text-3xl mb-3"></i>
+                                    <p>No recent notifications</p>
                                 </div>
                             </div>
                         </div>
@@ -273,20 +214,20 @@
 
                 <!-- Add Page Section -->
                 <section id="add-page-section" class="hidden space-y-6">
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-slide-up">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
                         <h3 class="text-lg font-semibold text-gray-800 mb-6">Add New Page</h3>
                         <form id="add-page-form" class="space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label for="page-date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                                    <input type="date" id="page-date" name="Date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                    <input type="date" id="page-date" name="Date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                                 </div>
                                 <div>
-                                    <label for="page-name" class="block text-sm font-medium text-gray-700 mb-1">Page Name</label>
+                                    <label for="page-name" class="block text-sm font-medium text-gray-700 mb-1">Page Name *</label>
                                     <input type="text" id="page-name" name="Page_Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                                 </div>
                                 <div>
-                                    <label for="page-link" class="block text-sm font-medium text-gray-700 mb-1">Page Link</label>
+                                    <label for="page-link" class="block text-sm font-medium text-gray-700 mb-1">Page Link *</label>
                                     <input type="url" id="page-link" name="Page_Link" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                                 </div>
                                 <div>
@@ -306,26 +247,26 @@
 
                 <!-- Add Ad Section -->
                 <section id="add-ad-section" class="hidden space-y-6">
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-slide-up">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
                         <h3 class="text-lg font-semibold text-gray-800 mb-6">Create New Ad</h3>
                         <form id="add-ad-form" class="space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label for="ad-date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                                    <input type="date" id="ad-date" name="Date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                    <input type="date" id="ad-date" name="Date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                                 </div>
                                 <div>
-                                    <label for="page-name-dropdown" class="block text-sm font-medium text-gray-700 mb-1">Page Name</label>
+                                    <label for="page-name-dropdown" class="block text-sm font-medium text-gray-700 mb-1">Page Name *</label>
                                     <select id="page-name-dropdown" name="Page_Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                                         <option value="">Loading pages...</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="product-name" class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                                    <label for="product-name" class="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
                                     <input type="text" id="product-name" name="Product_Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                                 </div>
                                 <div>
-                                    <label for="ad-link" class="block text-sm font-medium text-gray-700 mb-1">Ad Link</label>
+                                    <label for="ad-link" class="block text-sm font-medium text-gray-700 mb-1">Ad Link *</label>
                                     <input type="url" id="ad-link" name="Ad_Link" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                                 </div>
                                 <div>
@@ -355,22 +296,17 @@
 
                 <!-- Notifications Section -->
                 <section id="notifications-section" class="hidden space-y-6">
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-slide-up">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
                             <button id="mark-all-read" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-                                Mark all as read
+                                Refresh
                             </button>
                         </div>
                         <div id="notifications-list" class="space-y-3">
-                            <div class="animate-pulse flex space-x-4">
-                                <div class="flex-1 space-y-4 py-1">
-                                    <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-                                    <div class="space-y-2">
-                                        <div class="h-4 bg-gray-200 rounded"></div>
-                                        <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-                                    </div>
-                                </div>
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-bell-slash text-3xl mb-3"></i>
+                                <p>No notifications yet</p>
                             </div>
                         </div>
                     </div>
@@ -381,7 +317,7 @@
 
     <!-- Success Modal -->
     <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 transform transition-all animate-slide-up">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 transform transition-all animate-fade-in">
             <div class="text-center">
                 <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-check text-green-600 text-2xl"></i>
@@ -389,6 +325,22 @@
                 <h3 class="text-lg font-semibold text-gray-800 mb-2" id="success-title">Success!</h3>
                 <p class="text-gray-600 mb-6" id="success-message">Your data has been successfully submitted.</p>
                 <button id="close-success-modal" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="error-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 transform transition-all animate-fade-in">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2" id="error-title">Error!</h3>
+                <p class="text-gray-600 mb-6" id="error-message">There was an error processing your request.</p>
+                <button id="close-error-modal" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
                     Close
                 </button>
             </div>
@@ -406,6 +358,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Configuration
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqQmO32xF2UZiogY0Qqujv1wtqfMNxcYEmXgH_7SNZlQtQ-b2jpLuWnd6ZEBMFtQPlPw/exec'; // Replace with your deployed web app URL
+            
             // UI Elements
             const sections = {
                 dashboard: document.getElementById('dashboard-section'),
@@ -434,6 +389,8 @@
             const markAllRead = document.getElementById('mark-all-read');
             const successModal = document.getElementById('success-modal');
             const closeSuccessModal = document.getElementById('close-success-modal');
+            const errorModal = document.getElementById('error-modal');
+            const closeErrorModal = document.getElementById('close-error-modal');
             const loadingSpinner = document.getElementById('loading-spinner');
             
             // Forms
@@ -484,9 +441,11 @@
                 } else if (section === 'addAd') {
                     links.mobileAddAd.classList.add('active');
                     links.mobileAddAd.classList.remove('sidebar-item');
+                    loadPageNames();
                 } else if (section === 'notifications') {
                     links.mobileNotifications.classList.add('active');
                     links.mobileNotifications.classList.remove('sidebar-item');
+                    loadNotifications();
                 }
                 
                 // Close mobile menu if open
@@ -495,8 +454,6 @@
                 // Load data if needed
                 if (section === 'dashboard') {
                     loadDashboardData();
-                } else if (section === 'notifications') {
-                    loadNotifications();
                 }
             }
             
@@ -514,7 +471,6 @@
             links.addAd.addEventListener('click', (e) => {
                 e.preventDefault();
                 showSection('addAd');
-                loadPageNames();
             });
             
             links.notifications.addEventListener('click', (e) => {
@@ -536,7 +492,6 @@
             links.mobileAddAd.addEventListener('click', (e) => {
                 e.preventDefault();
                 showSection('addAd');
-                loadPageNames();
             });
             
             links.mobileNotifications.addEventListener('click', (e) => {
@@ -564,15 +519,15 @@
             });
             
             markAllRead.addEventListener('click', () => {
-                // TODO: Implement mark all as read functionality
-                document.querySelectorAll('.notification-card.unread').forEach(card => {
-                    card.classList.remove('unread');
-                });
-                updateNotificationBadge(0);
+                loadNotifications();
             });
             
             closeSuccessModal.addEventListener('click', () => {
                 successModal.classList.add('hidden');
+            });
+            
+            closeErrorModal.addEventListener('click', () => {
+                errorModal.classList.add('hidden');
             });
             
             // Form submissions
@@ -591,120 +546,126 @@
             loadPageNames();
             
             // Functions
-            function loadDashboardData() {
+            async function loadDashboardData() {
                 showLoading();
                 
-                // TODO: Replace with your Google Apps Script Web App URL
-                const scriptUrl = 'https://script.google.com/macros/s/AKfycbxqQmO32xF2UZiogY0Qqujv1wtqfMNxcYEmXgH_7SNZlQtQ-b2jpLuWnd6ZEBMFtQPlPw/exec';
-                
-                fetch(`${scriptUrl}?sheetName=Dashboard`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Update stats
-                        document.getElementById('total-pages').textContent = data.totalPages || '0';
-                        document.getElementById('active-ads').textContent = data.activeAds || '0';
-                        document.getElementById('deleted-ads').textContent = data.deletedAds || '0';
-                        
-                        // Update chart
-                        updateChart(data.activeAds, data.deletedAds);
-                        
-                        // Load recent notifications
-                        loadRecentNotifications(data.notifications || []);
-                        
-                        hideLoading();
-                    })
-                    .catch(error => {
-                        console.error('Error loading dashboard data:', error);
-                        hideLoading();
-                    });
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?action=getDashboardData`);
+                    const data = await response.json();
+                    
+                    if (data.status === 'error') {
+                        throw new Error(data.message);
+                    }
+                    
+                    // Update stats
+                    document.getElementById('total-pages').textContent = data.data.totalPages || '0';
+                    document.getElementById('active-ads').textContent = data.data.activeAds || '0';
+                    document.getElementById('deleted-ads').textContent = data.data.deletedAds || '0';
+                    
+                    // Update chart
+                    updateChart(data.data.activeAds, data.data.deletedAds);
+                    
+                    // Load recent notifications
+                    if (data.data.notifications && data.data.notifications.length > 0) {
+                        loadRecentNotifications(data.data.notifications);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error loading dashboard data:', error);
+                    showError('Error', 'Failed to load dashboard data');
+                } finally {
+                    hideLoading();
+                }
             }
             
-            function loadPageNames() {
-                // TODO: Replace with your Google Apps Script Web App URL
-                const scriptUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
-                
-                fetch(`${scriptUrl}?sheetName=Pages&action=getPageNames`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const dropdown = document.getElementById('page-name-dropdown');
-                        dropdown.innerHTML = '<option value="">Select a page</option>';
-                        
-                        if (data && data.length > 0) {
-                            data.forEach(page => {
-                                const option = document.createElement('option');
-                                option.value = page;
-                                option.textContent = page;
-                                dropdown.appendChild(option);
-                            });
-                        } else {
-                            dropdown.innerHTML = '<option value="">No pages found</option>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading page names:', error);
-                        document.getElementById('page-name-dropdown').innerHTML = '<option value="">Error loading pages</option>';
-                    });
+            async function loadPageNames() {
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?action=getPageNames`);
+                    const data = await response.json();
+                    
+                    if (data.status === 'error') {
+                        throw new Error(data.message);
+                    }
+                    
+                    const dropdown = document.getElementById('page-name-dropdown');
+                    dropdown.innerHTML = '<option value="">Select a page</option>';
+                    
+                    if (data.data && data.data.length > 0) {
+                        data.data.forEach(page => {
+                            const option = document.createElement('option');
+                            option.value = page;
+                            option.textContent = page;
+                            dropdown.appendChild(option);
+                        });
+                    } else {
+                        dropdown.innerHTML = '<option value="">No pages found</option>';
+                    }
+                } catch (error) {
+                    console.error('Error loading page names:', error);
+                    document.getElementById('page-name-dropdown').innerHTML = '<option value="">Error loading pages</option>';
+                }
             }
             
-            function loadNotifications() {
+            async function loadNotifications() {
                 showLoading();
                 
-                // TODO: Replace with your Google Apps Script Web App URL
-                const scriptUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
-                
-                fetch(`${scriptUrl}?sheetName=Dashboard&action=getNotifications`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const container = document.getElementById('notifications-list');
-                        container.innerHTML = '';
-                        
-                        if (data && data.length > 0) {
-                            data.forEach((notification, index) => {
-                                const card = document.createElement('div');
-                                card.className = `notification-card bg-white p-4 rounded-lg border border-gray-200 shadow-sm ${index < 3 ? 'unread border-l-4 border-l-blue-500' : ''}`;
-                                
-                                const timestamp = notification.timestamp || 'Just now';
-                                const icon = notification.type === 'deleted' ? '❌' : '🛎️';
-                                
-                                card.innerHTML = `
-                                    <div class="flex items-start space-x-3">
-                                        <div class="text-xl mt-1">${icon}</div>
-                                        <div class="flex-1">
-                                            <div class="flex justify-between items-start">
-                                                <p class="font-medium text-gray-800">${notification.message || 'Notification'}</p>
-                                                <span class="text-xs text-gray-500">${timestamp}</span>
-                                            </div>
-                                            ${notification.details ? `<p class="text-sm text-gray-600 mt-1">${notification.details}</p>` : ''}
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?action=getNotifications`);
+                    const data = await response.json();
+                    
+                    if (data.status === 'error') {
+                        throw new Error(data.message);
+                    }
+                    
+                    const container = document.getElementById('notifications-list');
+                    container.innerHTML = '';
+                    
+                    if (data.data && data.data.length > 0) {
+                        data.data.forEach((notification, index) => {
+                            const card = document.createElement('div');
+                            card.className = `notification-card bg-white p-4 rounded-lg border border-gray-200 shadow-sm ${index < 3 ? 'unread border-l-4 border-l-blue-500' : ''}`;
+                            
+                            const icon = notification.includes('❌') ? '❌' : '🛎️';
+                            const timeMatch = notification.match(/at (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
+                            const timestamp = timeMatch ? timeMatch[1] : 'Just now';
+                            
+                            card.innerHTML = `
+                                <div class="flex items-start space-x-3">
+                                    <div class="text-xl mt-1">${icon}</div>
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-start">
+                                            <p class="font-medium text-gray-800">${notification.split(' at ')[0]}</p>
+                                            <span class="text-xs text-gray-500">${timestamp}</span>
                                         </div>
                                     </div>
-                                `;
-                                
-                                container.appendChild(card);
-                            });
-                            
-                            updateNotificationBadge(data.filter(n => n.isNew).length);
-                        } else {
-                            container.innerHTML = `
-                                <div class="text-center py-8 text-gray-500">
-                                    <i class="fas fa-bell-slash text-3xl mb-3"></i>
-                                    <p>No notifications yet</p>
                                 </div>
                             `;
-                            updateNotificationBadge(0);
-                        }
+                            
+                            container.appendChild(card);
+                        });
                         
-                        hideLoading();
-                    })
-                    .catch(error => {
-                        console.error('Error loading notifications:', error);
-                        document.getElementById('notifications-list').innerHTML = `
+                        updateNotificationBadge(data.data.filter(n => n.includes('❌')).length);
+                    } else {
+                        container.innerHTML = `
                             <div class="text-center py-8 text-gray-500">
-                                <i class="fas fa-exclamation-triangle text-3xl mb-3"></i>
-                                <p>Error loading notifications</p>
+                                <i class="fas fa-bell-slash text-3xl mb-3"></i>
+                                <p>No notifications yet</p>
                             </div>
                         `;
-                        hideLoading();
-                    });
+                        updateNotificationBadge(0);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error loading notifications:', error);
+                    document.getElementById('notifications-list').innerHTML = `
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-exclamation-triangle text-3xl mb-3"></i>
+                            <p>Error loading notifications</p>
+                        </div>
+                    `;
+                } finally {
+                    hideLoading();
+                }
             }
             
             function loadRecentNotifications(notifications) {
@@ -716,18 +677,18 @@
                         const card = document.createElement('div');
                         card.className = 'notification-card bg-white p-4 rounded-lg border border-gray-200 shadow-sm';
                         
-                        const timestamp = notification.timestamp || 'Just now';
-                        const icon = notification.type === 'deleted' ? '❌' : '🛎️';
+                        const icon = notification.includes('❌') ? '❌' : '🛎️';
+                        const timeMatch = notification.match(/at (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
+                        const timestamp = timeMatch ? timeMatch[1] : 'Just now';
                         
                         card.innerHTML = `
                             <div class="flex items-start space-x-3">
                                 <div class="text-xl mt-1">${icon}</div>
                                 <div class="flex-1">
                                     <div class="flex justify-between items-start">
-                                        <p class="font-medium text-gray-800">${notification.message || 'Notification'}</p>
+                                        <p class="font-medium text-gray-800">${notification.split(' at ')[0]}</p>
                                         <span class="text-xs text-gray-500">${timestamp}</span>
                                     </div>
-                                    ${notification.details ? `<p class="text-sm text-gray-600 mt-1">${notification.details}</p>` : ''}
                                 </div>
                             </div>
                         `;
@@ -802,7 +763,7 @@
                 });
             }
             
-            function submitForm(formId, sheetName) {
+            async function submitForm(formId, sheetName) {
                 const form = document.getElementById(formId);
                 const formData = new FormData(form);
                 const data = {};
@@ -810,53 +771,51 @@
                 formData.forEach((value, key) => {
                     data[key] = value;
                 });
-                
+
                 showLoading();
                 
-                // TODO: Replace with your Google Apps Script Web App URL
-                const scriptUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
-                
-                fetch(scriptUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        sheetName: sheetName,
-                        data: data
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    hideLoading();
-                    showSuccessModal(
+                try {
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            sheetName: sheetName,
+                            data: data
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'error') {
+                        throw new Error(result.message);
+                    }
+
+                    showSuccess(
                         'Success!', 
                         formId === 'add-page-form' ? 'Page added successfully!' : 'Ad created successfully!'
                     );
                     
-                    // Reset form
                     form.reset();
-                    
-                    // Set current date again
-                    if (formId === 'add-page-form') {
-                        document.getElementById('page-date').value = today;
-                    } else {
-                        document.getElementById('ad-date').value = today;
-                    }
+                    document.getElementById(`${formId === 'add-page-form' ? 'page' : 'ad'}-date`).value = today;
                     
                     // Reload dashboard data if on dashboard
                     if (document.getElementById('dashboard-section').classList.contains('hidden') === false) {
                         loadDashboardData();
                     }
-                })
-                .catch(error => {
+                    
+                    // Reload page names if adding a new page
+                    if (formId === 'add-page-form') {
+                        loadPageNames();
+                    }
+                    
+                } catch (error) {
+                    console.error('Submission Error:', error);
+                    showError('Error', error.message || 'There was an error submitting your data');
+                } finally {
                     hideLoading();
-                    showSuccessModal(
-                        'Error', 
-                        'There was an error submitting your data. Please try again.'
-                    );
-                    console.error('Error:', error);
-                });
+                }
             }
             
             function updateNotificationBadge(count) {
@@ -876,10 +835,16 @@
                 });
             }
             
-            function showSuccessModal(title, message) {
+            function showSuccess(title, message) {
                 document.getElementById('success-title').textContent = title;
                 document.getElementById('success-message').textContent = message;
                 successModal.classList.remove('hidden');
+            }
+            
+            function showError(title, message) {
+                document.getElementById('error-title').textContent = title;
+                document.getElementById('error-message').textContent = message;
+                errorModal.classList.remove('hidden');
             }
             
             function showLoading() {
@@ -889,23 +854,6 @@
             function hideLoading() {
                 loadingSpinner.classList.add('hidden');
             }
-            
-            // Simulate initial data load (remove in production)
-            setTimeout(() => {
-                document.getElementById('total-pages').textContent = '12';
-                document.getElementById('active-ads').textContent = '48';
-                document.getElementById('deleted-ads').textContent = '15';
-                updateChart(48, 15);
-                
-                const sampleNotifications = [
-                    { message: 'Ad deleted: Summer Sale', details: 'Page: My Awesome Page', timestamp: '2 mins ago', type: 'deleted' },
-                    { message: 'New page added', details: 'Page: New Product Launch', timestamp: '15 mins ago', type: 'info' },
-                    { message: 'Ad performance alert', details: 'Ad CTR below average', timestamp: '1 hour ago', type: 'warning' }
-                ];
-                
-                loadRecentNotifications(sampleNotifications);
-                updateNotificationBadge(3);
-            }, 1500);
         });
     </script>
 </body>
