@@ -3,858 +3,743 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ad Monitor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Inventory & POS System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SweetAlert2 for notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .glassmorphism {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+        :root {
+            --primary-color: #4e73df;
+            --success-color: #1cc88a;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --secondary-color: #858796;
+            --light-color: #f8f9fc;
         }
-        .sidebar-item.active {
-            background: rgba(255, 255, 255, 0.2);
-            border-left: 3px solid rgba(14, 165, 233, 0.8);
+        
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fc;
         }
-        .notification-card {
-            transition: all 0.3s ease;
+        
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+            min-height: 100vh;
         }
-        .chart-container {
-            height: 300px;
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.2rem;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
         }
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-in-out;
+        
+        .sidebar .nav-link.active {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 0.25rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.35rem;
+            font-weight: 700;
+        }
+        
+        .badge-danger-soft {
+            color: #e74a3b;
+            background-color: #fbe9e7;
+        }
+        
+        .badge-success-soft {
+            color: #1cc88a;
+            background-color: #e6f7f1;
+        }
+        
+        .low-stock {
+            background-color: #fff3f2;
+        }
+        
+        .chart-area {
+            position: relative;
+            height: 10rem;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-area {
+                height: 20rem;
+            }
+        }
+        
+        .spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+        
+        .product-img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 50%;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen font-sans text-gray-800">
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <div class="glassmorphism w-64 flex-shrink-0 hidden md:flex flex-col border-r border-gray-200">
-            <div class="p-4 flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white">
-                    <i class="fas fa-ad text-lg"></i>
-                </div>
-                <h1 class="text-xl font-bold text-gray-800">Ad Monitor</h1>
-            </div>
-            <nav class="flex-1 px-2 py-4 space-y-1">
-                <a href="#" id="dashboard-link" class="sidebar-item active flex items-center px-4 py-3 text-sm font-medium rounded-md transition">
-                    <i class="fas fa-tachometer-alt mr-3 text-gray-600"></i>
-                    Dashboard
-                </a>
-                <a href="#" id="add-page-link" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md transition">
-                    <i class="fas fa-plus-circle mr-3 text-gray-600"></i>
-                    Add Page
-                </a>
-                <a href="#" id="add-ad-link" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md transition">
-                    <i class="fas fa-ad mr-3 text-gray-600"></i>
-                    Add Ad
-                </a>
-                <a href="#" id="notifications-link" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md transition">
-                    <i class="fas fa-bell mr-3 text-gray-600"></i>
-                    Notifications
-                    <span id="notification-badge" class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span>
-                </a>
-            </nav>
-        </div>
-
-        <!-- Mobile sidebar toggle -->
-        <div class="md:hidden fixed bottom-4 right-4 z-50">
-            <button id="mobile-menu-button" class="p-3 rounded-full bg-blue-600 text-white shadow-lg">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-
-        <!-- Mobile sidebar -->
-        <div id="mobile-sidebar" class="glassmorphism fixed inset-0 z-40 transform -translate-x-full md:hidden transition-transform duration-300">
-            <div class="flex flex-col h-full">
-                <div class="p-4 flex items-center justify-between border-b border-gray-200">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white">
-                            <i class="fas fa-ad text-lg"></i>
-                        </div>
-                        <h1 class="text-xl font-bold text-gray-800">Ad Monitor</h1>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-primary sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <h4 class="text-white">Inventory & POS</h4>
                     </div>
-                    <button id="close-mobile-menu" class="p-2 rounded-full hover:bg-gray-100">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" id="dashboard-tab">
+                                <i class="fas fa-fw fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="products-tab">
+                                <i class="fas fa-fw fa-boxes"></i>
+                                Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="sales-tab">
+                                <i class="fas fa-fw fa-shopping-cart"></i>
+                                Sales
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="purchases-tab">
+                                <i class="fas fa-fw fa-truck"></i>
+                                Purchases
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <nav class="flex-1 px-2 py-4 space-y-1">
-                    <a href="#" id="mobile-dashboard-link" class="sidebar-item active flex items-center px-4 py-3 text-sm font-medium rounded-md transition">
-                        <i class="fas fa-tachometer-alt mr-3 text-gray-600"></i>
-                        Dashboard
-                    </a>
-                    <a href="#" id="mobile-add-page-link" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md transition">
-                        <i class="fas fa-plus-circle mr-3 text-gray-600"></i>
-                        Add Page
-                    </a>
-                    <a href="#" id="mobile-add-ad-link" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md transition">
-                        <i class="fas fa-ad mr-3 text-gray-600"></i>
-                        Add Ad
-                    </a>
-                    <a href="#" id="mobile-notifications-link" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md transition">
-                        <i class="fas fa-bell mr-3 text-gray-600"></i>
-                        Notifications
-                        <span id="mobile-notification-badge" class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span>
-                    </a>
-                </nav>
             </div>
-        </div>
 
-        <!-- Main content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Top navigation -->
-            <header class="glassmorphism border-b border-gray-200">
-                <div class="flex items-center justify-between px-6 py-4">
-                    <h2 id="page-title" class="text-xl font-semibold text-gray-800">Dashboard</h2>
-                    <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <button id="notification-button" class="p-2 rounded-full hover:bg-gray-100 relative">
-                                <i class="fas fa-bell text-gray-600"></i>
-                                <span id="header-notification-badge" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Main content area -->
-            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
                 <!-- Dashboard Section -->
-                <section id="dashboard-section" class="space-y-6 animate-fade-in">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Total Pages Card -->
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500">Total Pages</p>
-                                    <h3 id="total-pages" class="text-3xl font-bold mt-2">0</h3>
-                                </div>
-                                <div class="p-3 rounded-lg bg-blue-50 text-blue-600">
-                                    <i class="fas fa-file-alt text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full" style="width: 100%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Active Ads Card -->
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500">Active Ads</p>
-                                    <h3 id="active-ads" class="text-3xl font-bold mt-2">0</h3>
-                                </div>
-                                <div class="p-3 rounded-lg bg-green-50 text-green-600">
-                                    <i class="fas fa-check-circle text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full" style="width: 75%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Deleted Ads Card -->
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500">Deleted Ads</p>
-                                    <h3 id="deleted-ads" class="text-3xl font-bold mt-2">0</h3>
-                                </div>
-                                <div class="p-3 rounded-lg bg-red-50 text-red-600">
-                                    <i class="fas fa-trash-alt text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-red-400 to-red-600 rounded-full" style="width: 25%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Chart Section -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="font-semibold text-gray-800">Ads Distribution</h3>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="adsChart"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="font-semibold text-gray-800">Recent Notifications</h3>
-                                <button id="refresh-notifications" class="p-2 rounded-full hover:bg-gray-100">
-                                    <i class="fas fa-sync-alt text-gray-600"></i>
-                                </button>
-                            </div>
-                            <div id="recent-notifications" class="space-y-3 max-h-64 overflow-y-auto">
-                                <div class="text-center py-8 text-gray-500">
-                                    <i class="fas fa-bell-slash text-3xl mb-3"></i>
-                                    <p>No recent notifications</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Add Page Section -->
-                <section id="add-page-section" class="hidden space-y-6">
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-6">Add New Page</h3>
-                        <form id="add-page-form" class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="page-date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                                    <input type="date" id="page-date" name="Date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
-                                </div>
-                                <div>
-                                    <label for="page-name" class="block text-sm font-medium text-gray-700 mb-1">Page Name *</label>
-                                    <input type="text" id="page-name" name="Page_Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
-                                </div>
-                                <div>
-                                    <label for="page-link" class="block text-sm font-medium text-gray-700 mb-1">Page Link *</label>
-                                    <input type="url" id="page-link" name="Page_Link" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
-                                </div>
-                                <div>
-                                    <label for="website" class="block text-sm font-medium text-gray-700 mb-1">Website (Optional)</label>
-                                    <input type="url" id="website" name="Website" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                </div>
-                            </div>
-                            <div class="pt-4">
-                                <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition flex items-center space-x-2">
-                                    <span>Add Page</span>
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </section>
-
-                <!-- Add Ad Section -->
-                <section id="add-ad-section" class="hidden space-y-6">
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-6">Create New Ad</h3>
-                        <form id="add-ad-form" class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="ad-date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                                    <input type="date" id="ad-date" name="Date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
-                                </div>
-                                <div>
-                                    <label for="page-name-dropdown" class="block text-sm font-medium text-gray-700 mb-1">Page Name *</label>
-                                    <select id="page-name-dropdown" name="Page_Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
-                                        <option value="">Loading pages...</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="product-name" class="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
-                                    <input type="text" id="product-name" name="Product_Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
-                                </div>
-                                <div>
-                                    <label for="ad-link" class="block text-sm font-medium text-gray-700 mb-1">Ad Link *</label>
-                                    <input type="url" id="ad-link" name="Ad_Link" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
-                                </div>
-                                <div>
-                                    <label for="product-link" class="block text-sm font-medium text-gray-700 mb-1">Product Link (Optional)</label>
-                                    <input type="url" id="product-link" name="Product_Link" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                </div>
-                                <div class="flex items-end">
-                                    <div class="w-full">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                        <div class="px-4 py-2 bg-green-100 text-green-800 rounded-lg inline-flex items-center">
-                                            <i class="fas fa-check-circle mr-2"></i>
-                                            <span>✅ ACTIVE</span>
+                <div id="dashboard-section">
+                    <h2 class="h4 mb-4">Dashboard Overview</h2>
+                    
+                    <div class="row mb-4">
+                        <!-- Summary Cards -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Total Products</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-products">0</div>
                                         </div>
-                                        <input type="hidden" name="Status" value="✅ ACTIVE">
+                                        <div class="col-auto">
+                                            <i class="fas fa-boxes fa-2x text-gray-300"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="pt-4">
-                                <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition flex items-center space-x-2">
-                                    <span>Create Ad</span>
-                                    <i class="fas fa-ad"></i>
-                                </button>
+                        </div>
+                        
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Total Stock Value</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-stock-value">$0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </form>
+                        </div>
+                        
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                Today's Sales</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="today-sales">$0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Low Stock Items</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="low-stock-items">0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </section>
-
-                <!-- Notifications Section -->
-                <section id="notifications-section" class="hidden space-y-6">
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-fade-in">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
-                            <button id="mark-all-read" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-                                Refresh
+                    
+                    <div class="row">
+                        <!-- Sales Chart -->
+                        <div class="col-xl-8 mb-4">
+                            <div class="card shadow">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Sales Overview (Last 7 Days)</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        <canvas id="salesChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Stock Chart -->
+                        <div class="col-xl-4 mb-4">
+                            <div class="card shadow">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Stock Status</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="stockChart"></canvas>
+                                    </div>
+                                    <div class="mt-4 text-center small">
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-primary"></i> In Stock
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-danger"></i> Low Stock
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-warning"></i> Out of Stock
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Top Products -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Top Selling Products</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-bar">
+                                        <canvas id="topProductsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Sales -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Recent Sales</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="recent-sales-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Invoice</th>
+                                                    <th>Customer</th>
+                                                    <th>Amount</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Will be populated by JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Products Section -->
+                <div id="products-section" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h2 class="h4">Product Management</h2>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <button class="btn btn-sm btn-primary" id="add-product-btn">
+                                <i class="fas fa-plus me-1"></i> Add Product
                             </button>
                         </div>
-                        <div id="notifications-list" class="space-y-3">
-                            <div class="text-center py-8 text-gray-500">
-                                <i class="fas fa-bell-slash text-3xl mb-3"></i>
-                                <p>No notifications yet</p>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="product-search" placeholder="Search products...">
+                                <button class="btn btn-outline-secondary" type="button" id="product-search-btn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="product-category-filter">
+                                <option value="">All Categories</option>
+                                <!-- Categories will be populated by JavaScript -->
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="product-sort">
+                                <option value="name-asc">Sort by: Name (A-Z)</option>
+                                <option value="name-desc">Name (Z-A)</option>
+                                <option value="stock-asc">Stock (Low-High)</option>
+                                <option value="stock-desc">Stock (High-Low)</option>
+                                <option value="price-asc">Price (Low-High)</option>
+                                <option value="price-desc">Price (High-Low)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Buy Price</th>
+                                    <th>Sell Price</th>
+                                    <th>Stock</th>
+                                    <th>SKU/Variant</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Products will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <nav aria-label="Product pagination">
+                        <ul class="pagination justify-content-center" id="product-pagination">
+                            <!-- Pagination will be generated by JavaScript -->
+                        </ul>
+                    </nav>
+                </div>
+                
+                <!-- Sales Section -->
+                <div id="sales-section" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h2 class="h4">Sales Management</h2>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title">New Sale</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="sale-form">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="sale-product-id" class="form-label">Product ID</label>
+                                                <input type="text" class="form-control" id="sale-product-id" list="product-ids" required>
+                                                <datalist id="product-ids">
+                                                    <!-- Product IDs will be populated by JavaScript -->
+                                                </datalist>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="sale-quantity" class="form-label">Quantity</label>
+                                                <input type="number" class="form-control" id="sale-quantity" min="1" value="1" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="sale-product-name" class="form-label">Product Name</label>
+                                                <input type="text" class="form-control" id="sale-product-name" readonly>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="sale-price" class="form-label">Unit Price</label>
+                                                <input type="number" class="form-control" id="sale-price" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="sale-customer" class="form-label">Customer</label>
+                                                <select class="form-select" id="sale-customer">
+                                                    <option value="">Walk-in Customer</option>
+                                                    <!-- Customers will be populated by JavaScript -->
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="sale-discount" class="form-label">Discount (৳)</label>
+                                                <input type="number" class="form-control" id="sale-discount" min="0" value="0">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="sale-payment-method" class="form-label">Payment Method</label>
+                                                <select class="form-select" id="sale-payment-method" required>
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="Bkash">Bkash</option>
+                                                    <option value="Card">Card</option>
+                                                    <option value="Bank Transfer">Bank Transfer</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="sale-total" class="form-label">Total Amount</label>
+                                                <input type="number" class="form-control" id="sale-total" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-success" id="sale-submit-btn">
+                                                <i class="fas fa-cash-register me-1"></i> Complete Sale
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title">Recent Sales</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group" id="recent-sales-list">
+                                        <!-- Recent sales will be loaded here -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+                
+                <!-- Purchases Section -->
+                <div id="purchases-section" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h2 class="h4">Purchase Management</h2>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <button class="btn btn-sm btn-primary" id="add-purchase-btn">
+                                <i class="fas fa-plus me-1"></i> New Purchase
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4" id="purchase-form-card" style="display: none;">
+                        <div class="card-header">
+                            <h5 class="card-title">New Purchase</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="purchase-form">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="purchase-supplier" class="form-label">Supplier</label>
+                                        <select class="form-select" id="purchase-supplier" required>
+                                            <!-- Suppliers will be populated by JavaScript -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="purchase-date" class="form-label">Date</label>
+                                        <input type="date" class="form-control" id="purchase-date" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="purchase-product-id" class="form-label">Product ID</label>
+                                        <input type="text" class="form-control" id="purchase-product-id" list="product-ids" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="purchase-product-name" class="form-label">Product Name</label>
+                                        <input type="text" class="form-control" id="purchase-product-name" readonly>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="purchase-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="purchase-quantity" min="1" value="1" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="purchase-buy-price" class="form-label">Buy Price (৳)</label>
+                                        <input type="number" class="form-control" id="purchase-buy-price" min="0" step="0.01" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="purchase-total" class="form-label">Total (৳)</label>
+                                        <input type="number" class="form-control" id="purchase-total" readonly>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="purchase-notes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="purchase-notes" rows="2"></textarea>
+                                </div>
+                                
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-secondary" id="cancel-purchase-btn">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" id="submit-purchase-btn">Record Purchase</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="purchases-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Supplier</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Purchases will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <nav aria-label="Purchase pagination">
+                        <ul class="pagination justify-content-center" id="purchase-pagination">
+                            <!-- Pagination will be generated by JavaScript -->
+                        </ul>
+                    </nav>
+                </div>
             </main>
         </div>
     </div>
-
-    <!-- Success Modal -->
-    <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 transform transition-all animate-fade-in">
-            <div class="text-center">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-check text-green-600 text-2xl"></i>
+    
+    <!-- Product Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2" id="success-title">Success!</h3>
-                <p class="text-gray-600 mb-6" id="success-message">Your data has been successfully submitted.</p>
-                <button id="close-success-modal" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
-                    Close
-                </button>
+                <div class="modal-body">
+                    <form id="product-form">
+                        <input type="hidden" id="product-id-edit">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="product-id" class="form-label">Product ID</label>
+                                <input type="text" class="form-control" id="product-id" required>
+                                <div class="form-text">Unique identifier for the product</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="product-name" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" id="product-name" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="product-category" class="form-label">Category</label>
+                                <input type="text" class="form-control" id="product-category" list="categories" required>
+                                <datalist id="categories">
+                                    <!-- Categories will be populated by JavaScript -->
+                                </datalist>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="product-image" class="form-label">Image URL</label>
+                                <input type="url" class="form-control" id="product-image">
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="product-buy-price" class="form-label">Buy Price (৳)</label>
+                                <input type="number" class="form-control" id="product-buy-price" min="0" step="0.01" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="product-sell-price" class="form-label">Sell Price (৳)</label>
+                                <input type="number" class="form-control" id="product-sell-price" min="0" step="0.01" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="product-stock" class="form-label">Initial Stock</label>
+                                <input type="number" class="form-control" id="product-stock" min="0" value="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="product-sku" class="form-label">SKU</label>
+                                <input type="text" class="form-control" id="product-sku">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="product-variant" class="form-label">Variant</label>
+                                <input type="text" class="form-control" id="product-variant">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="product-description" class="form-label">Description</label>
+                            <textarea class="form-control" id="product-description" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="save-product-btn">Save Product</button>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Error Modal -->
-    <div id="error-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 transform transition-all animate-fade-in">
-            <div class="text-center">
-                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+    
+    <!-- Invoice Modal -->
+    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="invoiceModalLabel">Invoice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2" id="error-title">Error!</h3>
-                <p class="text-gray-600 mb-6" id="error-message">There was an error processing your request.</p>
-                <button id="close-error-modal" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
-                    Close
-                </button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h4>INVOICE</h4>
+                        <p class="mb-1" id="invoice-number">Invoice #: INV-20230801-001</p>
+                        <p class="mb-1" id="invoice-date">Date: August 1, 2023</p>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6>From:</h6>
+                            <p class="mb-1"><strong>Your Business Name</strong></p>
+                            <p class="mb-1">Business Address</p>
+                            <p class="mb-1">City, Country</p>
+                            <p class="mb-1">Phone: +880 1XXX XXXXXX</p>
+                            <p class="mb-1">Email: business@example.com</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>To:</h6>
+                            <p class="mb-1"><strong id="invoice-customer-name">Walk-in Customer</strong></p>
+                            <p class="mb-1" id="invoice-customer-phone"></p>
+                            <p class="mb-1" id="invoice-customer-address"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Description</th>
+                                    <th>Qty</th>
+                                    <th>Unit Price</th>
+                                    <th>Discount</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoice-items">
+                                <!-- Invoice items will be populated here -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5" class="text-end"><strong>Subtotal</strong></td>
+                                    <td id="invoice-subtotal">৳0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-end"><strong>Discount</strong></td>
+                                    <td id="invoice-discount">৳0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-end"><strong>Total</strong></td>
+                                    <td id="invoice-total">৳0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="mb-1"><strong>Payment Method:</strong> <span id="invoice-payment-method">Cash</span></p>
+                        <p class="mb-1"><strong>Payment Status:</strong> <span class="badge bg-success">Paid</span></p>
+                    </div>
+                    
+                    <div class="border-top pt-3">
+                        <p>Thank you for your business!</p>
+                        <p class="mb-0">For any inquiries, please contact us at support@example.com</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="print-invoice-btn">
+                        <i class="fas fa-print me-1"></i> Print
+                    </button>
+                    <button type="button" class="btn btn-success" id="download-invoice-btn">
+                        <i class="fas fa-download me-1"></i> Download PDF
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-
+    
     <!-- Loading Spinner -->
-    <div id="loading-spinner" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 hidden">
-        <div class="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-4">
-            <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-gray-800">Processing...</span>
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50" id="loading-spinner" style="display: none; z-index: 9999;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Configuration
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqQmO32xF2UZiogY0Qqujv1wtqfMNxcYEmXgH_7SNZlQtQ-b2jpLuWnd6ZEBMFtQPlPw/exec'; // Replace with your deployed web app URL
-            
-            // UI Elements
-            const sections = {
-                dashboard: document.getElementById('dashboard-section'),
-                addPage: document.getElementById('add-page-section'),
-                addAd: document.getElementById('add-ad-section'),
-                notifications: document.getElementById('notifications-section')
-            };
-            
-            const links = {
-                dashboard: document.getElementById('dashboard-link'),
-                addPage: document.getElementById('add-page-link'),
-                addAd: document.getElementById('add-ad-link'),
-                notifications: document.getElementById('notifications-link'),
-                mobileDashboard: document.getElementById('mobile-dashboard-link'),
-                mobileAddPage: document.getElementById('mobile-add-page-link'),
-                mobileAddAd: document.getElementById('mobile-add-ad-link'),
-                mobileNotifications: document.getElementById('mobile-notifications-link')
-            };
-            
-            const pageTitle = document.getElementById('page-title');
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileSidebar = document.getElementById('mobile-sidebar');
-            const closeMobileMenu = document.getElementById('close-mobile-menu');
-            const notificationButton = document.getElementById('notification-button');
-            const refreshNotifications = document.getElementById('refresh-notifications');
-            const markAllRead = document.getElementById('mark-all-read');
-            const successModal = document.getElementById('success-modal');
-            const closeSuccessModal = document.getElementById('close-success-modal');
-            const errorModal = document.getElementById('error-modal');
-            const closeErrorModal = document.getElementById('close-error-modal');
-            const loadingSpinner = document.getElementById('loading-spinner');
-            
-            // Forms
-            const addPageForm = document.getElementById('add-page-form');
-            const addAdForm = document.getElementById('add-ad-form');
-            
-            // Chart
-            let adsChart;
-            
-            // Set current date as default in date fields
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('page-date').value = today;
-            document.getElementById('ad-date').value = today;
-            
-            // Navigation functions
-            function showSection(section) {
-                // Hide all sections
-                Object.values(sections).forEach(sec => sec.classList.add('hidden'));
-                
-                // Show selected section
-                sections[section].classList.remove('hidden');
-                
-                // Update page title
-                const titles = {
-                    dashboard: 'Dashboard',
-                    addPage: 'Add Page',
-                    addAd: 'Add Ad',
-                    notifications: 'Notifications'
-                };
-                pageTitle.textContent = titles[section];
-                
-                // Update active link
-                Object.values(links).forEach(link => {
-                    link.classList.remove('active');
-                    link.classList.add('sidebar-item');
-                });
-                
-                links[section].classList.add('active');
-                links[section].classList.remove('sidebar-item');
-                
-                // For mobile links
-                if (section === 'dashboard') {
-                    links.mobileDashboard.classList.add('active');
-                    links.mobileDashboard.classList.remove('sidebar-item');
-                } else if (section === 'addPage') {
-                    links.mobileAddPage.classList.add('active');
-                    links.mobileAddPage.classList.remove('sidebar-item');
-                } else if (section === 'addAd') {
-                    links.mobileAddAd.classList.add('active');
-                    links.mobileAddAd.classList.remove('sidebar-item');
-                    loadPageNames();
-                } else if (section === 'notifications') {
-                    links.mobileNotifications.classList.add('active');
-                    links.mobileNotifications.classList.remove('sidebar-item');
-                    loadNotifications();
-                }
-                
-                // Close mobile menu if open
-                mobileSidebar.classList.add('-translate-x-full');
-                
-                // Load data if needed
-                if (section === 'dashboard') {
-                    loadDashboardData();
-                }
-            }
-            
-            // Navigation event listeners
-            links.dashboard.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('dashboard');
-            });
-            
-            links.addPage.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('addPage');
-            });
-            
-            links.addAd.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('addAd');
-            });
-            
-            links.notifications.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('notifications');
-            });
-            
-            // Mobile navigation
-            links.mobileDashboard.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('dashboard');
-            });
-            
-            links.mobileAddPage.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('addPage');
-            });
-            
-            links.mobileAddAd.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('addAd');
-            });
-            
-            links.mobileNotifications.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('notifications');
-            });
-            
-            // Mobile menu toggle
-            mobileMenuButton.addEventListener('click', () => {
-                mobileSidebar.classList.remove('-translate-x-full');
-            });
-            
-            closeMobileMenu.addEventListener('click', () => {
-                mobileSidebar.classList.add('-translate-x-full');
-            });
-            
-            notificationButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('notifications');
-            });
-            
-            refreshNotifications.addEventListener('click', (e) => {
-                e.preventDefault();
-                loadNotifications();
-            });
-            
-            markAllRead.addEventListener('click', () => {
-                loadNotifications();
-            });
-            
-            closeSuccessModal.addEventListener('click', () => {
-                successModal.classList.add('hidden');
-            });
-            
-            closeErrorModal.addEventListener('click', () => {
-                errorModal.classList.add('hidden');
-            });
-            
-            // Form submissions
-            addPageForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                submitForm('add-page-form', 'Pages');
-            });
-            
-            addAdForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                submitForm('add-ad-form', 'Ads');
-            });
-            
-            // Initialize dashboard
-            showSection('dashboard');
-            loadPageNames();
-            
-            // Functions
-            async function loadDashboardData() {
-                showLoading();
-                
-                try {
-                    const response = await fetch(`${SCRIPT_URL}?action=getDashboardData`);
-                    const data = await response.json();
-                    
-                    if (data.status === 'error') {
-                        throw new Error(data.message);
-                    }
-                    
-                    // Update stats
-                    document.getElementById('total-pages').textContent = data.data.totalPages || '0';
-                    document.getElementById('active-ads').textContent = data.data.activeAds || '0';
-                    document.getElementById('deleted-ads').textContent = data.data.deletedAds || '0';
-                    
-                    // Update chart
-                    updateChart(data.data.activeAds, data.data.deletedAds);
-                    
-                    // Load recent notifications
-                    if (data.data.notifications && data.data.notifications.length > 0) {
-                        loadRecentNotifications(data.data.notifications);
-                    }
-                    
-                } catch (error) {
-                    console.error('Error loading dashboard data:', error);
-                    showError('Error', 'Failed to load dashboard data');
-                } finally {
-                    hideLoading();
-                }
-            }
-            
-            async function loadPageNames() {
-                try {
-                    const response = await fetch(`${SCRIPT_URL}?action=getPageNames`);
-                    const data = await response.json();
-                    
-                    if (data.status === 'error') {
-                        throw new Error(data.message);
-                    }
-                    
-                    const dropdown = document.getElementById('page-name-dropdown');
-                    dropdown.innerHTML = '<option value="">Select a page</option>';
-                    
-                    if (data.data && data.data.length > 0) {
-                        data.data.forEach(page => {
-                            const option = document.createElement('option');
-                            option.value = page;
-                            option.textContent = page;
-                            dropdown.appendChild(option);
-                        });
-                    } else {
-                        dropdown.innerHTML = '<option value="">No pages found</option>';
-                    }
-                } catch (error) {
-                    console.error('Error loading page names:', error);
-                    document.getElementById('page-name-dropdown').innerHTML = '<option value="">Error loading pages</option>';
-                }
-            }
-            
-            async function loadNotifications() {
-                showLoading();
-                
-                try {
-                    const response = await fetch(`${SCRIPT_URL}?action=getNotifications`);
-                    const data = await response.json();
-                    
-                    if (data.status === 'error') {
-                        throw new Error(data.message);
-                    }
-                    
-                    const container = document.getElementById('notifications-list');
-                    container.innerHTML = '';
-                    
-                    if (data.data && data.data.length > 0) {
-                        data.data.forEach((notification, index) => {
-                            const card = document.createElement('div');
-                            card.className = `notification-card bg-white p-4 rounded-lg border border-gray-200 shadow-sm ${index < 3 ? 'unread border-l-4 border-l-blue-500' : ''}`;
-                            
-                            const icon = notification.includes('❌') ? '❌' : '🛎️';
-                            const timeMatch = notification.match(/at (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
-                            const timestamp = timeMatch ? timeMatch[1] : 'Just now';
-                            
-                            card.innerHTML = `
-                                <div class="flex items-start space-x-3">
-                                    <div class="text-xl mt-1">${icon}</div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between items-start">
-                                            <p class="font-medium text-gray-800">${notification.split(' at ')[0]}</p>
-                                            <span class="text-xs text-gray-500">${timestamp}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            
-                            container.appendChild(card);
-                        });
-                        
-                        updateNotificationBadge(data.data.filter(n => n.includes('❌')).length);
-                    } else {
-                        container.innerHTML = `
-                            <div class="text-center py-8 text-gray-500">
-                                <i class="fas fa-bell-slash text-3xl mb-3"></i>
-                                <p>No notifications yet</p>
-                            </div>
-                        `;
-                        updateNotificationBadge(0);
-                    }
-                    
-                } catch (error) {
-                    console.error('Error loading notifications:', error);
-                    document.getElementById('notifications-list').innerHTML = `
-                        <div class="text-center py-8 text-gray-500">
-                            <i class="fas fa-exclamation-triangle text-3xl mb-3"></i>
-                            <p>Error loading notifications</p>
-                        </div>
-                    `;
-                } finally {
-                    hideLoading();
-                }
-            }
-            
-            function loadRecentNotifications(notifications) {
-                const container = document.getElementById('recent-notifications');
-                container.innerHTML = '';
-                
-                if (notifications && notifications.length > 0) {
-                    notifications.slice(0, 3).forEach(notification => {
-                        const card = document.createElement('div');
-                        card.className = 'notification-card bg-white p-4 rounded-lg border border-gray-200 shadow-sm';
-                        
-                        const icon = notification.includes('❌') ? '❌' : '🛎️';
-                        const timeMatch = notification.match(/at (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
-                        const timestamp = timeMatch ? timeMatch[1] : 'Just now';
-                        
-                        card.innerHTML = `
-                            <div class="flex items-start space-x-3">
-                                <div class="text-xl mt-1">${icon}</div>
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-start">
-                                        <p class="font-medium text-gray-800">${notification.split(' at ')[0]}</p>
-                                        <span class="text-xs text-gray-500">${timestamp}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        
-                        container.appendChild(card);
-                    });
-                    
-                    if (notifications.length > 3) {
-                        const moreLink = document.createElement('a');
-                        moreLink.href = '#';
-                        moreLink.className = 'block text-center text-sm text-blue-600 hover:text-blue-800 mt-3';
-                        moreLink.textContent = `View all ${notifications.length} notifications`;
-                        moreLink.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            showSection('notifications');
-                        });
-                        container.appendChild(moreLink);
-                    }
-                } else {
-                    container.innerHTML = `
-                        <div class="text-center py-4 text-gray-500">
-                            <p>No recent notifications</p>
-                        </div>
-                    `;
-                }
-            }
-            
-            function updateChart(activeAds, deletedAds) {
-                const ctx = document.getElementById('adsChart').getContext('2d');
-                
-                if (adsChart) {
-                    adsChart.destroy();
-                }
-                
-                adsChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Active Ads', 'Deleted Ads'],
-                        datasets: [{
-                            data: [activeAds || 0, deletedAds || 0],
-                            backgroundColor: [
-                                'rgba(16, 185, 129, 0.8)',
-                                'rgba(239, 68, 68, 0.8)'
-                            ],
-                            borderColor: [
-                                'rgba(16, 185, 129, 1)',
-                                'rgba(239, 68, 68, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const label = context.label || '';
-                                        const value = context.raw || 0;
-                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                        const percentage = Math.round((value / total) * 100);
-                                        return `${label}: ${value} (${percentage}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            async function submitForm(formId, sheetName) {
-                const form = document.getElementById(formId);
-                const formData = new FormData(form);
-                const data = {};
-                
-                formData.forEach((value, key) => {
-                    data[key] = value;
-                });
-
-                showLoading();
-                
-                try {
-                    const response = await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            sheetName: sheetName,
-                            data: data
-                        })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.status === 'error') {
-                        throw new Error(result.message);
-                    }
-
-                    showSuccess(
-                        'Success!', 
-                        formId === 'add-page-form' ? 'Page added successfully!' : 'Ad created successfully!'
-                    );
-                    
-                    form.reset();
-                    document.getElementById(`${formId === 'add-page-form' ? 'page' : 'ad'}-date`).value = today;
-                    
-                    // Reload dashboard data if on dashboard
-                    if (document.getElementById('dashboard-section').classList.contains('hidden') === false) {
-                        loadDashboardData();
-                    }
-                    
-                    // Reload page names if adding a new page
-                    if (formId === 'add-page-form') {
-                        loadPageNames();
-                    }
-                    
-                } catch (error) {
-                    console.error('Submission Error:', error);
-                    showError('Error', error.message || 'There was an error submitting your data');
-                } finally {
-                    hideLoading();
-                }
-            }
-            
-            function updateNotificationBadge(count) {
-                const badges = [
-                    document.getElementById('notification-badge'),
-                    document.getElementById('mobile-notification-badge'),
-                    document.getElementById('header-notification-badge')
-                ];
-                
-                badges.forEach(badge => {
-                    if (count > 0) {
-                        badge.textContent = count;
-                        badge.classList.remove('hidden');
-                    } else {
-                        badge.classList.add('hidden');
-                    }
-                });
-            }
-            
-            function showSuccess(title, message) {
-                document.getElementById('success-title').textContent = title;
-                document.getElementById('success-message').textContent = message;
-                successModal.classList.remove('hidden');
-            }
-            
-            function showError(title, message) {
-                document.getElementById('error-title').textContent = title;
-                document.getElementById('error-message').textContent = message;
-                errorModal.classList.remove('hidden');
-            }
-            
-            function showLoading() {
-                loadingSpinner.classList.remove('hidden');
-            }
-            
-            function hideLoading() {
-                loadingSpinner.classList.add('hidden');
-            }
-        });
-    </script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="app.js"></script>
 </body>
 </html>
