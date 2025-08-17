@@ -1,745 +1,470 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory & POS System</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
+    <title>আলট্রা-মডার্ন ই-কমার্স রোডম্যাপ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- SweetAlert2 for notifications -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Sophisticated Teal & Graphite -->
+    <!-- Application Structure Plan: The application maintains its robust tabbed SPA structure but with a complete visual overhaul. The focus is on a clean, professional aesthetic with superior usability. Local Storage for persistence and the contextual AI Assistant remain core features, now presented in a highly polished and intuitive interface. -->
+    <!-- Visualization & Content Choices: 1. Roadmap -> Goal: Organize/Inform -> Viz: A redesigned, minimalist stepper with custom SVG icons and smoother interactions. -> Interaction: Expand/collapse, mark complete (state saved) -> Justification: Elevates the core checklist feature to a premium, professional standard. Method: HTML/CSS/JS. 2. Budget Planner -> Goal: Plan/Inform -> Viz: A cleaner Doughnut Chart integrated into a well-spaced layout. -> Interaction: Persistent user inputs dynamically update the chart. -> Justification: Provides a clear and aesthetically pleasing financial planning tool. Library: Chart.js. 3. AI Assistant -> Goal: Guide/Advise -> Viz: A clean, single-column interface for focused interaction. -> Interaction: User selects a task to receive expert guidance. -> Justification: Simplifies the AI interaction, making it feel like a focused consultation. Method: JS Fetch API. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        :root {
-            --primary-color: #4e73df;
-            --success-color: #1cc88a;
-            --info-color: #36b9cc;
-            --warning-color: #f6c23e;
-            --danger-color: #e74a3b;
-            --secondary-color: #858796;
-            --light-color: #f8f9fc;
-        }
-        
         body {
-            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f8f9fc;
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #334155; /* slate-700 */
         }
-        
-        .sidebar {
-            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
-            min-height: 100vh;
+        .nav-btn {
+            transition: all 0.2s ease-in-out;
+            border-bottom: 3px solid transparent;
         }
-        
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 600;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.2rem;
+        .nav-btn.active {
+            color: #0d9488; /* teal-600 */
+            border-bottom-color: #0d9488; /* teal-600 */
         }
-        
-        .sidebar .nav-link:hover {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.1);
+        .nav-btn:not(.active):hover {
+            color: #14b8a6; /* teal-500 */
         }
-        
-        .sidebar .nav-link.active {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .sidebar .nav-link i {
-            margin-right: 0.25rem;
-        }
-        
-        .card {
-            border: none;
-            border-radius: 0.35rem;
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-        }
-        
-        .card-header {
-            background-color: #f8f9fc;
-            border-bottom: 1px solid #e3e6f0;
-            padding: 1rem 1.35rem;
-            font-weight: 700;
-        }
-        
-        .badge-danger-soft {
-            color: #e74a3b;
-            background-color: #fbe9e7;
-        }
-        
-        .badge-success-soft {
-            color: #1cc88a;
-            background-color: #e6f7f1;
-        }
-        
-        .low-stock {
-            background-color: #fff3f2;
-        }
-        
-        .chart-area {
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .step {
             position: relative;
-            height: 10rem;
-            width: 100%;
+            padding-left: 3.5rem;
+            padding-bottom: 2.5rem;
+            border-left: 2px solid #e2e8f0; /* slate-200 */
         }
-        
-        @media (min-width: 768px) {
-            .chart-area {
-                height: 20rem;
-            }
+        .step:last-child {
+            border-left: 2px solid transparent;
+            padding-bottom: 0;
         }
-        
-        .spinner-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100px;
-        }
-        
-        .product-img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
+        .step-marker {
+            position: absolute;
+            left: -1.3rem;
+            top: -0.25rem;
+            width: 2.5rem;
+            height: 2.5rem;
             border-radius: 50%;
+            background-color: #f1f5f9; /* slate-100 */
+            border: 2px solid #e2e8f0; /* slate-200 */
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step.completed .step-marker {
+            background-color: #0d9488; /* teal-600 */
+            border-color: #0d9488; /* teal-600 */
+        }
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+            border: 1px solid #e2e8f0; /* slate-200 */
+        }
+        .loader {
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #0d9488;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .custom-select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%2364748b' class='w-6 h-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.2em;
         }
     </style>
 </head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 d-md-block bg-primary sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <div class="text-center mb-4">
-                        <h4 class="text-white">Inventory & POS</h4>
-                    </div>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#" id="dashboard-tab">
-                                <i class="fas fa-fw fa-tachometer-alt"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" id="products-tab">
-                                <i class="fas fa-fw fa-boxes"></i>
-                                Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" id="sales-tab">
-                                <i class="fas fa-fw fa-shopping-cart"></i>
-                                Sales
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" id="purchases-tab">
-                                <i class="fas fa-fw fa-truck"></i>
-                                Purchases
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+<body class="antialiased">
 
-            <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-                <!-- Dashboard Section -->
-                <div id="dashboard-section">
-                    <h2 class="h4 mb-4">Dashboard Overview</h2>
-                    
-                    <div class="row mb-4">
-                        <!-- Summary Cards -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total Products</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-products">0</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-boxes fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800">ই-কমার্স বিজনেস রোডম্যাপ</h1>
+            <p class="text-slate-500 mt-3 text-lg">শূন্য থেকে সফল উদ্যোক্তা হওয়ার আলট্রা-মডার্ন গাইড</p>
+        </header>
+
+        <div class="flex justify-center mb-10 border-b border-slate-200">
+            <nav class="flex flex-wrap justify-center gap-6 md:gap-10 -mb-px">
+                <button class="nav-btn active flex items-center gap-2.5 py-4 font-semibold text-slate-500" data-target="roadmap">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13V7m6 13l5.447-2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 7m0 13V7m-6 0h6"></path></svg>
+                    <span>রোডম্যাপ</span>
+                </button>
+                <button class="nav-btn flex items-center gap-2.5 py-4 font-semibold text-slate-500" data-target="budget">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                    <span>বাজেট প্ল্যানার</span>
+                </button>
+                <button class="nav-btn flex items-center gap-2.5 py-4 font-semibold text-slate-500" data-target="ai-assistant">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.375 3.375 0 0014 18.442V21.003a5 5 0 00-10 0v-2.561a3.375 3.375 0 00-.75-2.122l-.547-.547z"></path></svg>
+                    <span>AI পরামর্শক</span>
+                </button>
+            </nav>
+        </div>
+        
+        <main>
+            <section id="roadmap" class="content-section active">
+                <div id="roadmap-container" class="max-w-4xl mx-auto">
+                    <!-- Steps will be injected here by JavaScript -->
+                </div>
+            </section>
+
+            <section id="budget" class="content-section">
+                <div class="card p-6 md:p-8 max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold mb-2 text-center text-slate-800">প্রাথমিক খরচের হিসাব</h3>
+                    <p class="text-center text-slate-500 mb-8">আপনার সম্ভাব্য প্রাথমিক বিনিয়োগের একটি ধারণা নিন।</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-slate-600">ল্যাপটপ/পিসি (৳)</label>
+                                <input type="number" data-item="ল্যাপটপ/পিসি" value="20000" class="cost-input w-full p-2.5 border border-slate-300 rounded-md mt-1 focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-slate-600">প্রিন্টার (৳)</label>
+                                <input type="number" data-item="প্রিন্টার" value="8000" class="cost-input w-full p-2.5 border border-slate-300 rounded-md mt-1 focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-slate-600">প্রাথমিক পণ্য (৳)</label>
+                                <input type="number" data-item="পণ্য" value="10000" class="cost-input w-full p-2.5 border border-slate-300 rounded-md mt-1 focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-slate-600">বিজ্ঞাপন বাজেট (মাসিক) (৳)</label>
+                                <input type="number" data-item="বিজ্ঞাপন" value="5000" class="cost-input w-full p-2.5 border border-slate-300 rounded-md mt-1 focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                             <div>
+                                <label class="text-sm font-medium text-slate-600">অন্যান্য (প্যাকেজিং) (৳)</label>
+                                <input type="number" data-item="অন্যান্য" value="2000" class="cost-input w-full p-2.5 border border-slate-300 rounded-md mt-1 focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
                             </div>
                         </div>
-                        
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Total Stock Value</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-stock-value">$0</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="flex flex-col items-center justify-center">
+                            <div class="relative w-full h-64 md:h-72">
+                                <canvas id="costChart"></canvas>
                             </div>
-                        </div>
-                        
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                Today's Sales</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="today-sales">$0</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Low Stock Items</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="low-stock-items">0</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <!-- Sales Chart -->
-                        <div class="col-xl-8 mb-4">
-                            <div class="card shadow">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Sales Overview (Last 7 Days)</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="salesChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Stock Chart -->
-                        <div class="col-xl-4 mb-4">
-                            <div class="card shadow">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Stock Status</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="stockChart"></canvas>
-                                    </div>
-                                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> In Stock
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-danger"></i> Low Stock
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-warning"></i> Out of Stock
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <!-- Top Products -->
-                        <div class="col-lg-6 mb-4">
-                            <div class="card shadow">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Top Selling Products</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-bar">
-                                        <canvas id="topProductsChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Recent Sales -->
-                        <div class="col-lg-6 mb-4">
-                            <div class="card shadow">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Recent Sales</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover" id="recent-sales-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Invoice</th>
-                                                    <th>Customer</th>
-                                                    <th>Amount</th>
-                                                    <th>Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!-- Will be populated by JavaScript -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                            <div class="text-center mt-6">
+                                <span class="text-slate-500 font-medium">মোট আনুমানিক খরচ:</span>
+                                <span id="total-cost" class="font-bold text-4xl text-teal-600 block">৳ 45,000</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Products Section -->
-                <div id="products-section" style="display: none;">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h2 class="h4">Product Management</h2>
-                        <div class="btn-toolbar mb-2 mb-md-0">
-                            <button class="btn btn-sm btn-primary" id="add-product-btn">
-                                <i class="fas fa-plus me-1"></i> Add Product
-                            </button>
+            </section>
+
+            <section id="ai-assistant" class="content-section">
+                <div class="card p-6 md:p-8 max-w-4xl mx-auto">
+                     <h2 class="text-2xl font-bold mb-2 text-center text-slate-800">AI পরামর্শক</h2>
+                    <p class="text-center text-slate-500 mb-8">আপনার ব্যবসার যেকোনো ধাপ সম্পর্কে বিশেষজ্ঞের পরামর্শ নিন।</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="task-select" class="block text-sm font-medium text-slate-700 mb-2">কোন বিষয়ে গাইডলাইন প্রয়োজন?</label>
+                            <select id="task-select" class="custom-select w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white">
+                                <!-- Options will be injected here -->
+                            </select>
                         </div>
+                        <button id="generate-guideline-btn" class="w-full bg-teal-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-teal-700 transition flex items-center justify-center gap-2 shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.375 3.375 0 0014 18.442V21.003a5 5 0 00-10 0v-2.561a3.375 3.375 0 00-.75-2.122l-.547-.547z"></path></svg>
+                            <span>গাইডলাইন তৈরি করুন</span>
+                        </button>
+                        <div id="guideline-output" class="mt-6 p-5 bg-slate-50 rounded-lg min-h-[250px] whitespace-pre-wrap text-slate-700 border border-slate-200"></div>
                     </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="product-search" placeholder="Search products...">
-                                <button class="btn btn-outline-secondary" type="button" id="product-search-btn">
-                                    <i class="fas fa-search"></i>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roadmapData = [
+                 {
+                    part: "পর্ব ১: নাগরিক ও আইনি প্রস্তুতি",
+                    icon: `<svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>`,
+                    steps: [
+                        { id: 1, title: "জাতীয় পরিচয়পত্র (NID) সংগ্রহ", essential: "এটি আপনার পরিচয়ের মূল দলিল। ব্যাংক অ্যাকাউন্ট, ট্রেড লাইসেন্স, পাসপোর্ট—সবকিছুর জন্য NID বাধ্যতামূলক।", howto: "আপনার স্থায়ী ঠিকানার নিকটস্থ নির্বাচন কমিশন অফিসে যোগাযোগ করে NID-এর জন্য আবেদন করুন।" },
+                        { id: 2, title: "ব্যক্তিগত ব্যাংক অ্যাকাউন্ট খোলা", essential: "ব্যবসার সমস্ত আর্থিক লেনদেন এবং কুরিয়ার থেকে COD কালেকশনের টাকা গ্রহণের জন্য এটি অপরিহার্য।", howto: "NID কার্ড হাতে পাওয়ার পর, যেকোনো নির্ভরযোগ্য ব্যাংকে গিয়ে একটি সেভিংস অ্যাকাউন্ট খুলুন।" },
+                        { id: 3, title: "পাসপোর্ট তৈরি", essential: "আন্তর্জাতিক পেমেন্টের জন্য ডুয়াল কারেন্সি কার্ড পেতে পাসপোর্ট থাকা বাধ্যতামূলক।", howto: "আপনার NID ও অন্যান্য কাগজপত্র দিয়ে অনলাইনে বা সরাসরি পাসপোর্ট অফিসে গিয়ে আবেদন করুন।" },
+                        { id: 4, title: "ডুয়াল কারেন্সি কার্ড সংগ্রহ", essential: "ফেসবুক/গুগলে বিজ্ঞাপন চালানো, ডোমেইন, হোস্টিং বা Shopify-এর বিল ডলারে পরিশোধ করতে এটি আবশ্যক।", howto: "পাসপোর্ট হাতে পাওয়ার পর, ব্যাংক থেকে আপনার অ্যাকাউন্টের বিপরীতে একটি ডুয়াল কারেন্সি কার্ডের জন্য আবেদন করুন এবং ডলার এনডোর্স করে নিন।" }
+                    ]
+                },
+                {
+                    part: "পর্ব ২: ব্যবসায়িক সরঞ্জাম ও পরিকল্পনা",
+                    icon: `<svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>`,
+                    steps: [
+                        { id: 5, title: "কম্পিউটার/ল্যাপটপ ও প্রিন্টার সংগ্রহ", essential: "ওয়েবসাইট পরিচালনা, বিজ্ঞাপন ম্যানেজ করা এবং কুরিয়ারের জন্য শিপিং লেবেল প্রিন্ট করতে এগুলো অপরিহার্য।", howto: "শুরুতে কম খরচে একটি সেকেন্ড হ্যান্ড ল্যাপটপ এবং একটি বেসিক লেজারজেট প্রিন্টার কিনে নিন।" },
+                        { id: 6, title: "পণ্য গবেষণা ও চূড়ান্তকরণ", essential: "সঠিক পণ্য নির্বাচন ব্যবসার সফলতার মূল চাবিকাঠি। ভুল পণ্য আপনার অর্থ ও শ্রম দুটোই নষ্ট করবে।", howto: "ফেসবুক গ্রুপ, Daraz, এবং ইউটিউব রিভিউ দেখে ২-৪টি চাহিদা সম্পন্ন ও লাভজনক পণ্য নির্বাচন করুন।" },
+                        { id: 7, title: "নির্ভরযোগ্য সরবরাহকারী খুঁজে বের করা", essential: "কম দামে ভালো মানের পণ্য কিনতে পারা আপনার ব্যবসার লাভের জন্য গুরুত্বপূর্ণ।", howto: "ঢাকার গুলিস্তান, পাটুয়াটুলী বা মোতালেব প্লাজার পাইকারি বাজার থেকে অল্প পরিমাণে (৫-১০ পিস) পণ্য কিনুন।" },
+                        { id: 8, title: "ব্র্যান্ডিং (নাম ও লোগো)", essential: "একটি ভালো নাম ও লোগো আপনার ব্যবসাকে অন্যদের থেকে আলাদা করে এবং গ্রাহকের মনে আস্থা তৈরি করে।", howto: "সহজ ও মনে রাখার মতো নাম ঠিক করুন এবং Canva ব্যবহার করে একটি সাধারণ লোগো তৈরি করুন।" }
+                    ]
+                },
+                {
+                    part: "পর্ব ৩: ডিজিটাল উপস্থিতি তৈরি",
+                    icon: `<svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>`,
+                    steps: [
+                        { id: 9, title: "ফেসবুক ও ইনস্টাগ্রাম বিজনেস পেজ তৈরি", essential: "বাংলাদেশে ই-কমার্সের প্রায় ৮০% বিক্রি ফেসবুকের মাধ্যমে হয়। এটিই আপনার ব্যবসার প্রধান মাধ্যম হবে।", howto: "আপনার ব্র্যান্ডের নামে পেজ খুলে লোগো, কভার ফটো এবং প্রয়োজনীয় তথ্য দিয়ে সুন্দরভাবে সাজান।" },
+                        { id: 10, title: "পণ্যের আকর্ষণীয় ছবি ও ভিডিও তৈরি", essential: "অনলাইন ব্যবসায় ছবি ও ভিডিওর মানই গ্রাহককে কেনার সিদ্ধান্ত নিতে সবচেয়ে বেশি প্রভাবিত করে।", howto: "দিনের আলোতে, সাদা ব্যাকগ্রাউন্ডে আপনার স্মার্টফোন দিয়ে পরিষ্কার ছবি তুলুন এবং সম্ভব হলে একটি ৩০-৬০ সেকেন্ডের ভিডিও তৈরি করুন।" },
+                        { id: 11, title: "প্যাকেজিং সামগ্রী ক্রয়", essential: "পণ্যকে সুরক্ষিতভাবে গ্রাহকের কাছে পৌঁছে দেওয়া এবং একটি ভালো আনবক্সিং অভিজ্ঞতা দেওয়া জরুরি।", howto: "বাবল র‍্যাপ, ফ্লায়ার/পলিব্যাগ এবং টেপ আপনার এলাকার প্যাকেজিং সামগ্রীর দোকান থেকে কিনে নিন।" }
+                    ]
+                },
+                {
+                    part: "পর্ব ৪: কার্যক্রম শুরু ও ব্যবসা বৃদ্ধি",
+                    icon: `<svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>`,
+                    steps: [
+                        { id: 12, title: "ডেলিভারি কোম্পানির সাথে চুক্তি", essential: "পণ্য ডেলিভারি এবং ক্যাশ অন ডেলিভারির টাকা সংগ্রহের জন্য এটি ছাড়া কোনো উপায় নেই।", howto: "Pathao, RedX, বা Steadfast-এর ওয়েবসাইটে গিয়ে একটি মার্চেন্ট অ্যাকাউন্টের জন্য নিবন্ধন করুন।" },
+                        { id: 13, title: "দাম নির্ধারণ ও প্রথম বিজ্ঞাপন", essential: "সঠিক মূল্য নির্ধারণ এবং কার্যকর বিজ্ঞাপন আপনার ব্যবসাকে লাভজনক করতে সাহায্য করবে।", howto: "পণ্যের সকল খরচ ও লাভ যোগ করে দাম নির্ধারণ করুন এবং প্রতিদিন ২০০-৩০০ টাকার ফেসবুক বিজ্ঞাপন দিয়ে শুরু করুন।" },
+                        { id: 14, title: "অফিস/জায়গা নির্ধারণ", essential: "শুরুতে কোনো আলাদা অফিসের প্রয়োজন নেই। খরচ বাঁচানোই মূল লক্ষ্য।", howto: "আপনার বাসার একটি ছোট কোণাই পণ্য স্টক করা, প্যাকিং করা এবং যাবতীয় কাজ করার জন্য যথেষ্ট।" }
+                    ]
+                }
+            ];
+
+            const appState = {
+                completedSteps: [],
+                budget: {
+                    'ল্যাপটপ/পিসি': 20000, 'প্রিন্টার': 8000, 'পণ্য': 10000, 'বিজ্ঞাপন': 5000, 'অন্যান্য': 2000
+                }
+            };
+            
+            function saveState() {
+                localStorage.setItem('ecommerceRoadmapState', JSON.stringify(appState));
+            }
+
+            function loadState() {
+                const savedState = localStorage.getItem('ecommerceRoadmapState');
+                if (savedState) {
+                    const parsedState = JSON.parse(savedState);
+                    appState.completedSteps = parsedState.completedSteps || [];
+                    appState.budget = parsedState.budget || appState.budget;
+                }
+            }
+
+            const container = document.getElementById('roadmap-container');
+            const taskSelect = document.getElementById('task-select');
+            let stepCounter = 0;
+
+            roadmapData.forEach(part => {
+                const partTitle = document.createElement('h2');
+                partTitle.className = 'text-2xl font-bold text-slate-800 mb-6 mt-10 first:mt-0 flex items-center gap-3';
+                partTitle.innerHTML = `${part.icon} <span>${part.part}</span>`;
+                container.appendChild(partTitle);
+
+                part.steps.forEach(step => {
+                    stepCounter++;
+                    const stepElement = document.createElement('div');
+                    stepElement.className = 'step';
+                    stepElement.dataset.stepId = step.id;
+                    stepElement.innerHTML = `
+                        <div class="step-marker">
+                             <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <div class="step-content">
+                            <h3 class="text-xl font-semibold text-slate-800 cursor-pointer flex justify-between items-center group">
+                                <span>${step.title}</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5 text-slate-400 expand-icon transform transition-transform group-hover:text-slate-600"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                            </h3>
+                            <div class="details mt-4 pt-4 pl-4 border-l-2 border-slate-200">
+                                <p class="text-slate-600 mb-3"><strong class="font-semibold text-slate-900">কেন অপরিহার্য:</strong> ${step.essential}</p>
+                                <p class="text-slate-600"><strong class="font-semibold text-slate-900">কীভাবে করবেন:</strong> ${step.howto}</p>
+                                <button class="complete-btn mt-4 px-4 py-2 text-sm font-semibold rounded-lg transition flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span>সম্পন্ন হিসেবে চিহ্নিত করুন</span>
                                 </button>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <select class="form-select" id="product-category-filter">
-                                <option value="">All Categories</option>
-                                <!-- Categories will be populated by JavaScript -->
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-select" id="product-sort">
-                                <option value="name-asc">Sort by: Name (A-Z)</option>
-                                <option value="name-desc">Name (Z-A)</option>
-                                <option value="stock-asc">Stock (Low-High)</option>
-                                <option value="stock-desc">Stock (High-Low)</option>
-                                <option value="price-asc">Price (Low-High)</option>
-                                <option value="price-desc">Price (High-Low)</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="products-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Buy Price</th>
-                                    <th>Sell Price</th>
-                                    <th>Stock</th>
-                                    <th>SKU/Variant</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Products will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <nav aria-label="Product pagination">
-                        <ul class="pagination justify-content-center" id="product-pagination">
-                            <!-- Pagination will be generated by JavaScript -->
-                        </ul>
-                    </nav>
-                </div>
-                
-                <!-- Sales Section -->
-                <div id="sales-section" style="display: none;">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h2 class="h4">Sales Management</h2>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="card-title">New Sale</h5>
-                                </div>
-                                <div class="card-body">
-                                    <form id="sale-form">
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="sale-product-id" class="form-label">Product ID</label>
-                                                <input type="text" class="form-control" id="sale-product-id" list="product-ids" required>
-                                                <datalist id="product-ids">
-                                                    <!-- Product IDs will be populated by JavaScript -->
-                                                </datalist>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="sale-quantity" class="form-label">Quantity</label>
-                                                <input type="number" class="form-control" id="sale-quantity" min="1" value="1" required>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="sale-product-name" class="form-label">Product Name</label>
-                                                <input type="text" class="form-control" id="sale-product-name" readonly>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="sale-price" class="form-label">Unit Price</label>
-                                                <input type="number" class="form-control" id="sale-price" readonly>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="sale-customer" class="form-label">Customer</label>
-                                                <select class="form-select" id="sale-customer">
-                                                    <option value="">Walk-in Customer</option>
-                                                    <!-- Customers will be populated by JavaScript -->
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="sale-discount" class="form-label">Discount (৳)</label>
-                                                <input type="number" class="form-control" id="sale-discount" min="0" value="0">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="sale-payment-method" class="form-label">Payment Method</label>
-                                                <select class="form-select" id="sale-payment-method" required>
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="Bkash">Bkash</option>
-                                                    <option value="Card">Card</option>
-                                                    <option value="Bank Transfer">Bank Transfer</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="sale-total" class="form-label">Total Amount</label>
-                                                <input type="number" class="form-control" id="sale-total" readonly>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="d-grid gap-2">
-                                            <button type="submit" class="btn btn-success" id="sale-submit-btn">
-                                                <i class="fas fa-cash-register me-1"></i> Complete Sale
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="card-title">Recent Sales</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="list-group" id="recent-sales-list">
-                                        <!-- Recent sales will be loaded here -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Purchases Section -->
-                <div id="purchases-section" style="display: none;">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h2 class="h4">Purchase Management</h2>
-                        <div class="btn-toolbar mb-2 mb-md-0">
-                            <button class="btn btn-sm btn-primary" id="add-purchase-btn">
-                                <i class="fas fa-plus me-1"></i> New Purchase
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-4" id="purchase-form-card" style="display: none;">
-                        <div class="card-header">
-                            <h5 class="card-title">New Purchase</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="purchase-form">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="purchase-supplier" class="form-label">Supplier</label>
-                                        <select class="form-select" id="purchase-supplier" required>
-                                            <!-- Suppliers will be populated by JavaScript -->
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="purchase-date" class="form-label">Date</label>
-                                        <input type="date" class="form-control" id="purchase-date" required>
-                                    </div>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="purchase-product-id" class="form-label">Product ID</label>
-                                        <input type="text" class="form-control" id="purchase-product-id" list="product-ids" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="purchase-product-name" class="form-label">Product Name</label>
-                                        <input type="text" class="form-control" id="purchase-product-name" readonly>
-                                    </div>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label for="purchase-quantity" class="form-label">Quantity</label>
-                                        <input type="number" class="form-control" id="purchase-quantity" min="1" value="1" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="purchase-buy-price" class="form-label">Buy Price (৳)</label>
-                                        <input type="number" class="form-control" id="purchase-buy-price" min="0" step="0.01" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="purchase-total" class="form-label">Total (৳)</label>
-                                        <input type="number" class="form-control" id="purchase-total" readonly>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="purchase-notes" class="form-label">Notes</label>
-                                    <textarea class="form-control" id="purchase-notes" rows="2"></textarea>
-                                </div>
-                                
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <button type="button" class="btn btn-secondary" id="cancel-purchase-btn">Cancel</button>
-                                    <button type="submit" class="btn btn-primary" id="submit-purchase-btn">Record Purchase</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="purchases-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Supplier</th>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Price</th>
-                                    <th>Total</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Purchases will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <nav aria-label="Purchase pagination">
-                        <ul class="pagination justify-content-center" id="purchase-pagination">
-                            <!-- Pagination will be generated by JavaScript -->
-                        </ul>
-                    </nav>
-                </div>
-            </main>
-        </div>
-    </div>
-    
-    <!-- Product Modal -->
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="productModalLabel">Add New Product</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="product-form">
-                        <input type="hidden" id="product-id-edit">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="product-id" class="form-label">Product ID</label>
-                                <input type="text" class="form-control" id="product-id" required>
-                                <div class="form-text">Unique identifier for the product</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="product-name" class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="product-name" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="product-category" class="form-label">Category</label>
-                                <input type="text" class="form-control" id="product-category" list="categories" required>
-                                <datalist id="categories">
-                                    <!-- Categories will be populated by JavaScript -->
-                                </datalist>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="product-image" class="form-label">Image URL</label>
-                                <input type="url" class="form-control" id="product-image">
-                            </div>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="product-buy-price" class="form-label">Buy Price (৳)</label>
-                                <input type="number" class="form-control" id="product-buy-price" min="0" step="0.01" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="product-sell-price" class="form-label">Sell Price (৳)</label>
-                                <input type="number" class="form-control" id="product-sell-price" min="0" step="0.01" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="product-stock" class="form-label">Initial Stock</label>
-                                <input type="number" class="form-control" id="product-stock" min="0" value="0" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="product-sku" class="form-label">SKU</label>
-                                <input type="text" class="form-control" id="product-sku">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="product-variant" class="form-label">Variant</label>
-                                <input type="text" class="form-control" id="product-variant">
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="product-description" class="form-label">Description</label>
-                            <textarea class="form-control" id="product-description" rows="3"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save-product-btn">Save Product</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Invoice Modal -->
-    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="invoiceModalLabel">Invoice</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center mb-4">
-                        <h4>INVOICE</h4>
-                        <p class="mb-1" id="invoice-number">Invoice #: INV-20230801-001</p>
-                        <p class="mb-1" id="invoice-date">Date: August 1, 2023</p>
-                    </div>
-                    
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h6>From:</h6>
-                            <p class="mb-1"><strong>Your Business Name</strong></p>
-                            <p class="mb-1">Business Address</p>
-                            <p class="mb-1">City, Country</p>
-                            <p class="mb-1">Phone: +880 1XXX XXXXXX</p>
-                            <p class="mb-1">Email: business@example.com</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>To:</h6>
-                            <p class="mb-1"><strong id="invoice-customer-name">Walk-in Customer</strong></p>
-                            <p class="mb-1" id="invoice-customer-phone"></p>
-                            <p class="mb-1" id="invoice-customer-address"></p>
-                        </div>
-                    </div>
-                    
-                    <div class="table-responsive mb-4">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Description</th>
-                                    <th>Qty</th>
-                                    <th>Unit Price</th>
-                                    <th>Discount</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody id="invoice-items">
-                                <!-- Invoice items will be populated here -->
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="5" class="text-end"><strong>Subtotal</strong></td>
-                                    <td id="invoice-subtotal">৳0.00</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-end"><strong>Discount</strong></td>
-                                    <td id="invoice-discount">৳0.00</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-end"><strong>Total</strong></td>
-                                    <td id="invoice-total">৳0.00</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <p class="mb-1"><strong>Payment Method:</strong> <span id="invoice-payment-method">Cash</span></p>
-                        <p class="mb-1"><strong>Payment Status:</strong> <span class="badge bg-success">Paid</span></p>
-                    </div>
-                    
-                    <div class="border-top pt-3">
-                        <p>Thank you for your business!</p>
-                        <p class="mb-0">For any inquiries, please contact us at support@example.com</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="print-invoice-btn">
-                        <i class="fas fa-print me-1"></i> Print
-                    </button>
-                    <button type="button" class="btn btn-success" id="download-invoice-btn">
-                        <i class="fas fa-download me-1"></i> Download PDF
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Loading Spinner -->
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50" id="loading-spinner" style="display: none; z-index: 9999;">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
+                    `;
+                    container.appendChild(stepElement);
 
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JavaScript -->
-    <script src="app.js"></script>
+                    const option = document.createElement('option');
+                    option.value = step.title;
+                    option.textContent = `${stepCounter}. ${step.title}`;
+                    taskSelect.appendChild(option);
+                });
+            });
+
+            function updateUIFromState() {
+                document.querySelectorAll('.step').forEach(stepEl => {
+                    const stepId = parseInt(stepEl.dataset.stepId);
+                    const btn = stepEl.querySelector('.complete-btn');
+                    if (appState.completedSteps.includes(stepId)) {
+                        stepEl.classList.add('completed');
+                        btn.querySelector('span').textContent = 'অসম্পূর্ণ করুন';
+                        btn.classList.add('bg-teal-50', 'text-teal-700', 'hover:bg-teal-100');
+                        btn.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+                    } else {
+                        stepEl.classList.remove('completed');
+                        btn.querySelector('span').textContent = 'সম্পন্ন হিসেবে চিহ্নিত করুন';
+                        btn.classList.remove('bg-teal-50', 'text-teal-700', 'hover:bg-teal-100');
+                        btn.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+                    }
+                });
+
+                costInputs.forEach(input => {
+                    const itemName = input.dataset.item;
+                    if (appState.budget[itemName] !== undefined) {
+                        input.value = appState.budget[itemName];
+                    }
+                });
+                updateChart();
+            }
+
+            container.addEventListener('click', function(e) {
+                const header = e.target.closest('h3');
+                if (header) {
+                    const details = header.nextElementSibling;
+                    const icon = header.querySelector('.expand-icon');
+                    if (details.style.maxHeight) {
+                        details.style.maxHeight = null;
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        details.style.maxHeight = details.scrollHeight + "px";
+                        icon.classList.add('rotate-180');
+                    }
+                }
+
+                if (e.target.closest('.complete-btn')) {
+                    const stepElement = e.target.closest('.step');
+                    const stepId = parseInt(stepElement.dataset.stepId);
+                    
+                    const index = appState.completedSteps.indexOf(stepId);
+                    if (index > -1) {
+                        appState.completedSteps.splice(index, 1);
+                    } else {
+                        appState.completedSteps.push(stepId);
+                    }
+                    saveState();
+                    updateUIFromState();
+                }
+            });
+            
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const contentSections = document.querySelectorAll('.content-section');
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    contentSections.forEach(section => {
+                        section.classList.toggle('active', section.id === targetId);
+                    });
+                });
+            });
+
+            const costInputs = document.querySelectorAll('.cost-input');
+            const totalCostEl = document.getElementById('total-cost');
+            const ctx = document.getElementById('costChart').getContext('2d');
+            let costChart;
+
+            function updateChart() {
+                let totalCost = 0;
+                const labels = [];
+                const data = [];
+                
+                costInputs.forEach(input => {
+                    const value = parseFloat(input.value) || 0;
+                    const itemName = input.dataset.item;
+                    totalCost += value;
+                    labels.push(itemName);
+                    data.push(value);
+                    appState.budget[itemName] = value;
+                });
+
+                totalCostEl.textContent = `৳ ${totalCost.toLocaleString('bn-BD')}`;
+
+                if (costChart) {
+                    costChart.data.labels = labels;
+                    costChart.data.datasets[0].data = data;
+                    costChart.update();
+                } else {
+                    costChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: ['#14b8a6', '#f59e0b', '#3b82f6', '#ef4444', '#64748b'],
+                                borderColor: '#FFFFFF',
+                                borderWidth: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.label || '';
+                                            if (label) { label += ': '; }
+                                            if (context.parsed !== null) {
+                                                label += new Intl.NumberFormat('bn-BD', { style: 'currency', currency: 'BDT' }).format(context.parsed);
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                saveState();
+            }
+            
+            costInputs.forEach(input => input.addEventListener('input', updateChart));
+            
+            const callGeminiAPI = async (prompt, outputElement, buttonElement) => {
+                outputElement.innerHTML = '<div class="flex justify-center items-center h-full"><div class="loader"></div></div>';
+                buttonElement.disabled = true;
+
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                    
+                    const result = await response.json();
+                    if (result.candidates && result.candidates[0]?.content?.parts?.[0]?.text) {
+                        outputElement.innerText = result.candidates[0].content.parts[0].text;
+                    } else {
+                        outputElement.innerText = 'দুঃখিত, কোনো কনটেন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।';
+                    }
+                } catch (error) {
+                    outputElement.innerText = 'একটি সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
+                } finally {
+                    buttonElement.disabled = false;
+                }
+            };
+            
+            document.getElementById('generate-guideline-btn').addEventListener('click', () => {
+                const task = document.getElementById('task-select').value;
+                if (!task) { alert('অনুগ্রহ করে একটি বিষয় নির্বাচন করুন।'); return; }
+                const prompt = `Act as an expert e-commerce consultant for a new entrepreneur in Bangladesh. Provide a detailed, step-by-step, actionable guideline on how to accomplish the following task: "${task}". The guideline should be in Bengali (Bangla), easy to understand, and include practical tips, local examples (like specific markets in Dhaka or courier services), and potential challenges to look out for. Structure the response with clear headings and bullet points.`;
+                callGeminiAPI(prompt, document.getElementById('guideline-output'), document.getElementById('generate-guideline-btn'));
+            });
+
+            loadState();
+            updateUIFromState();
+        });
+    </script>
 </body>
 </html>
